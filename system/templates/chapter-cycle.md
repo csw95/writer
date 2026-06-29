@@ -1,0 +1,262 @@
+# Chapter Generation Cycle
+
+单章完整生成循环。从 STATE 2 到 STATE 6。此模板用于人工单章生成，也可作为后续每日 3-10 章自动化的最小循环单元。
+
+## 前置条件
+
+- 明确 `novel_id`
+- `novels/{novel_id}/bible/premise.md` 已完成
+- `premise` 已声明 channel / category / subcategory / tags
+- `premise` 已声明 length_tier / target_chapters / target_chapter_chars / target_total_chars
+- `novels/{novel_id}/world/worldbuilding.md` 已完成，且包含世界规则、资源、代价、禁止事项和开篇显露策略
+- `novels/{novel_id}/characters/cast.md` 已完成，且当前 Volume / Arc 关键人物具备最小画像和阶段命运方向
+- `novels/{novel_id}/canon/facts.md` 已完成，且当前 Volume / Arc 涉及的历史真相、暗线事实、身份秘密、能力代价、物品真相和揭露窗口已登记
+- `novels/{novel_id}/structure/long-term-arc.md` 已完成
+- 当前 Volume 文件已完成，且已填写本卷人物配置与命运、关系线编排和事实显露计划
+- 当前 Arc 文件已完成，且已通过 Arc 人物门禁、关系线编排和事实显露节拍
+- 当前 Arc 的章节级关系线节拍已明确
+- 当前 Arc 的章节级事实显露、误导、维持或揭露节点已明确
+- 当前 state 文件已更新到最新章节
+- 当前 state 文件的最近章节摘要、时间线、地点、人物位置、战力资源、敌对势力行动、质量风险和错误修复台账已更新到最新章节
+- 当前 canon/facts 文件已更新到最新章节
+- 当前 open_loops 文件已更新到最新章节
+- 当前无阻塞级错误修复提案；如有，必须先完成内容补齐或重新规划
+- 上一章 review 通过（第一章除外）
+
+缺少任一项，停止章节生成，回到内容补齐。
+
+## 必读方法论
+
+- `system/methodology/core.md`
+- `system/methodology/length-standards.md`
+- `system/methodology/scene-chapter.md`
+- `system/methodology/prose-style.md`
+- `system/methodology/characters.md`
+- `system/methodology/relationship-lines.md`
+- `system/methodology/canon.md`
+- `system/methodology/novel-categories.md`
+- `system/methodology/genre-promises.md`
+- 第一章额外读取 `system/methodology/opening.md`
+- 审阅阶段读取 `system/methodology/review-rubric.md`
+
+## STATE 2: 章节规划
+
+### 输入
+
+- `novels/{novel_id}/bible/premise.md`
+- `novels/{novel_id}/world/worldbuilding.md`
+- `novels/{novel_id}/characters/cast.md`
+- `novels/{novel_id}/canon/facts.md`
+- `novels/{novel_id}/state/current-state.md`
+- `novels/{novel_id}/open-loops/loops.md`
+- `novels/{novel_id}/structure/long-term-arc.md`
+- premise 中的频道、主分类、细分类和标签
+- premise 中的篇幅档位和章节字数范围
+- 当前 Volume 文件 `novels/{novel_id}/structure/volumes/volume-{N}.md`
+- 当前 Arc 文件 `novels/{novel_id}/structure/arcs/arc-{N}.md`
+- 当前 Volume / Arc 的关系线编排
+- 当前 Volume / Arc 的事实显露计划
+- 当前 state 中的时间线、地点、人物位置、战力资源、敌对势力行动和最近章节摘要
+- 当前 state 中后续 3-5 章节奏窗口、质量风险和错误修复台账
+- 上一章的 chapter_plan 和 review（如适用）
+
+### 操作
+
+读取 `system/agents/planner.md`，以 Planner AI 角色生成 chapter_plan。
+
+### 输出
+
+`novels/{novel_id}/structure/chapter-plans/ch-{N}.md`
+
+### 验证
+
+- [ ] chapter_plan 包含所有必填字段
+- [ ] classification 继承 premise 的频道、主分类、细分类和标签
+- [ ] length_plan 包含 target_chars / min_chars / max_chars / scene_budgets
+- [ ] length_plan 符合 premise 中的篇幅档位
+- [ ] genre_promise 非空
+- [ ] emotional_curve 非空
+- [ ] scenes 至少 3 个关键场景
+- [ ] conflict.intensity >= 5
+- [ ] crisis_choice 包含明确代价
+- [ ] must_have_events >= 3
+- [ ] ending_hook 非空且钩子类型明确
+- [ ] 至少推进 1 个剧情变量
+- [ ] 所有角色在 cast.md 中已定义
+- [ ] 本章涉及的命名/复登/关键转折人物已具备最小画像
+- [ ] 本章人物作用与当前 Volume / Arc 的人物命运安排一致
+- [ ] relationship_line_plan 已声明本章推进/维持/暂停的关系线
+- [ ] 本章关系线操作与当前 Volume / Arc 的关系线编排一致
+- [ ] 未出现未规划恋爱、背叛、牺牲、决裂、同盟转向、手足和解或关系确认
+- [ ] canon_fact_plan 已声明本章引用的 Fact ID、显露层级、读者可见信息和角色知情变化
+- [ ] 本章涉及的暗线、历史旧案、身份秘密、能力代价、物品真相或制度真相均已在 canon/facts.md 中登记
+- [ ] 本章事实显露不超过当前 Volume / Arc 的揭露窗口和揭露上限
+- [ ] pre_write_state_check 已确认时间线、地点、人物位置、战力资源、敌对势力行动和上一章钩子
+- [ ] time_location_continuity 已声明本章故事时间、地点变化、移动成本和人物可达性
+- [ ] 每个关键场景包含前因、目标、阻碍、行动、选择、结果变化和后续影响
+- [ ] 每个关键场景包含呈现焦点、至少2个感官锚点、动作节拍、句式节奏和禁止概括项
+- [ ] power_resource_plan 已声明战力、能力、资源、道具、伤势或地位变化；无变化也写明“无”
+- [ ] antagonist_action_plan 已声明敌对势力或压力源本章主动行动；若本章没有反派出场，也必须说明外部压力如何存在
+- [ ] downstream_impact 已说明本章结果影响后续 3-5 章的方式
+- [ ] 无用巧合、临场道具、设定补丁、反派降智或主角突然开窍解决核心矛盾
+- [ ] 第一章符合黄金三章任务
+
+## STATE 3: 章节生成
+
+### 输入
+
+- 本章 chapter_plan
+- 本章 chapter_plan 中每个关键场景的呈现焦点、感官锚点、动作节拍、句式节奏和禁止概括项
+- 当前 state
+- premise 中的篇幅档位和章节字数范围
+- premise、world、characters（只读）
+- canon/facts（只读）
+- 当前 Volume / Arc（只读）
+- 当前 Volume / Arc 的关系线编排（只读）
+- 当前 Volume / Arc 的事实显露计划（只读）
+- 当前时间线、地点、人物位置、战力资源、敌对势力行动和最近章节摘要（只读）
+
+### 操作
+
+读取 `system/agents/writer.md`，以 Writer AI 角色生成正文。
+
+### 输出
+
+`novels/{novel_id}/chapters/ch-{N}.md`
+
+### 验证
+
+- [ ] 正文包含所有 must_have_events
+- [ ] 正文实际字数落在 length_plan 的 min_chars 与 max_chars 之间
+- [ ] 正文字数统计不包含标题、元数据、审阅报告或空行
+- [ ] 按 scenes 顺序完成主要场景
+- [ ] 每个关键场景都产生局势、人物、关系、伏笔、情绪、设定显露、战力资源或地点状态中的至少一项变化
+- [ ] 每个关键场景都执行了呈现焦点、至少2个感官锚点、动作节拍、句式节奏和禁止概括项
+- [ ] 关键动作没有被“一番激战后、很快、转眼、众人震惊”等总结句跳过
+- [ ] 情绪主要通过动作、语气、停顿、视线、身体反应或选择外化
+- [ ] 存在至少1个冲突点
+- [ ] 存在至少1个变化点
+- [ ] 类型承诺被明确兑现
+- [ ] 情绪曲线完整
+- [ ] 结尾兑现 ending_hook 或明确延迟原因
+- [ ] 无设定外元素
+- [ ] 无未建档关键人物、未规划背叛/死亡/洗白/恋爱推进等重大人物转折
+- [ ] 无未规划关系线推进；关系变化符合 chapter_plan.relationship_line_plan
+- [ ] 无未登记事实、未规划真相揭露、角色越权知情或违背 canon/facts.md 的内容
+- [ ] 事实显露符合 chapter_plan.canon_fact_plan 的显露层级
+- [ ] 人物说话、行动和选择符合 cast.md 中的画像、底线和阶段命运方向
+- [ ] 时间线、地点、人物位置、战力资源和敌对势力行动与 state 连续
+- [ ] 战力、能力、资源、道具和伤势变化符合 world 约束和 chapter_plan.power_resource_plan
+- [ ] 反派或压力源有主动性，不只是等待主角触发剧情
+- [ ] 重大胜利有铺垫、代价或风险；重大失败会影响后续剧情
+- [ ] 第一章前 500 字内出现冲突或异常
+
+## STATE 4: 审阅修正
+
+### 输入
+
+- 本章 chapter_plan
+- 本章 chapter_plan 中每个关键场景的呈现焦点、感官锚点、动作节拍、句式节奏和禁止概括项
+- 本章正文
+- premise、world、characters
+- 当前 canon/facts
+- 当前 state
+- 当前 open_loops
+- 当前 Volume / Arc
+- 当前 Volume / Arc 的关系线编排
+- 当前 Volume / Arc 的事实显露计划
+- 当前时间线、地点、战力资源、敌对势力行动、最近章节摘要和错误修复台账
+
+### 操作
+
+读取 `system/agents/reviewer.md`，以 Reviewer AI 角色审阅。
+
+### 输出
+
+`novels/{novel_id}/chapters/ch-{N}-review.md`
+
+### 判定
+
+- 综合分 >= 7.5 且核心维度 >= 6 → 进入 STATE 5
+- 综合分 7.0-7.4 → 小修后进入 STATE 5
+- 综合分 < 7 或核心维度 < 5 → 返回 STATE 3 重写
+- 叙事表现评分任一项 < 5 → 返回 STATE 3 重写对应场景
+- 叙事表现评分任一项为 5-6 → 小修后进入 STATE 5
+- 存在阻塞级逻辑问题 → 返回 STATE 2 重新规划
+- 存在未建档关键人物或未预设重大命运转折 → 停止正文流程，回到人物画像补齐
+- 存在未登记或未预设关系线重大推进 → 停止正文流程，回到关系线台账和 Volume / Arc 编排补齐
+- 存在未登记核心事实、违背 canon/facts.md、角色知道未显露真相、或公开超过揭露窗口的事实 → 停止正文流程，回到事实库和章节规划补齐
+- 存在时间线矛盾、地点移动不成立、战力资源不守恒、人物行为无触发条件、反派降智、核心矛盾靠巧合解决 → 阻塞，回到规划或内容补齐
+- 存在无因果变化场景，且无法合并为有效推进 → 返回 STATE 3 重写
+- 正文字数低于 min_chars 15% 以上 → 返回 STATE 3 扩写有效场景
+- 正文字数高于 max_chars 20% 且非高潮/终章 → 返回 STATE 3 压缩或拆章
+- 第一章开篇额外项低于 7 → 不允许作为自动化续写起点
+
+## STATE 5: 状态更新
+
+### 输入
+
+- chapter_plan、正文、review 报告
+- 当前 characters/cast.md
+- 当前 canon/facts.md
+- 当前 state 文件
+- 当前 open_loops 文件
+- 当前 Volume / Arc
+- 当前 Volume / Arc 的关系线编排
+- 当前 Volume / Arc 的事实显露计划
+
+### 操作
+
+读取 `system/agents/state-manager.md`，以 State Manager AI 角色更新。
+
+### 输出
+
+- 更新 `novels/{novel_id}/state/current-state.md`
+- 更新 `novels/{novel_id}/characters/cast.md` 中已登场人物的状态、关系变化、命运推进和已揭示秘密
+- 更新 `novels/{novel_id}/canon/facts.md` 中本章涉及事实的当前显露状态、读者已知、角色知情变化、关联章节计划和修订记录（不得临场改写真实事实）
+- 更新 state / cast 中已推进的关系线状态、触发事件、信任度或关系强度变化、下一计划节点
+- 更新 `novels/{novel_id}/open-loops/loops.md`
+- 更新章节摘要、场景因果链、时间线、地点、人物位置、战力资源、敌对势力行动、质量风险和错误修复台账
+- 如存在批次任务，更新 `novels/{novel_id}/runs/{date}.md`
+
+### 验证
+
+- [ ] state 中 current_chapter 已更新
+- [ ] protagonist 状态已反映本章变化
+- [ ] 敌对势力状态已更新
+- [ ] unresolved_conflicts 已更新
+- [ ] plot_variables 已更新
+- [ ] cast.md 已同步本章人物入场、关系变化、命运推进和已揭示秘密
+- [ ] 关系线状态已同步，且下一次推进节点不晚于当前 Volume / Arc 规划
+- [ ] canon/facts.md 已同步本章事实显露状态、角色知情变化和关联章节计划
+- [ ] 未改写 canon/facts.md 的真实事实、公开版本和禁止改写项
+- [ ] open_loops 中本章推进/新埋/回收的伏笔已记录
+- [ ] 最近章节摘要已追加本章目标、局势变化和下一章承接点
+- [ ] 时间线、地点、人物位置、战力资源、伤势、声望和道具变化已同步
+- [ ] 敌对势力当前行动、误判、损失、底牌暴露或下一步计划已同步
+- [ ] 场景因果链已记录本章关键前因、选择、结果和后续影响
+- [ ] 质量风险与错误修复台账已更新；阻塞级问题不得留到下一章
+- [ ] 下一章目标承接本章 ending_hook
+
+## STATE 6: 循环推进
+
+更新 lifecycle_state 为 STATE_6，然后：
+
+- 如果还有下一章 → 将 lifecycle_state 重置为 STATE_2，开始下一轮
+- 如果当前 Arc 完成 → 先补齐下一 Arc 人物门禁、关系线编排和事实显露节拍，再生成下一个 Arc 的章节概要
+- 如果当前 Volume 完成 → 先补齐下一 Volume 人物配置、命运、关系线编排和事实显露计划，再生成下一个 Volume 的目标与压力阶梯
+- 如果最近 3-5 章无明显局势变化 → 暂停批量推进，先调整下一章 chapter_plan
+- 如果最近 10-20 章剧情单元未闭环 → 暂停批量推进，先补齐单元收束或压力升级计划
+- 如果全书完成 → 标记为完结
+
+## 完整循环检查清单
+
+- [ ] STATE 2: chapter_plan 生成且验证通过
+- [ ] STATE 3: 正文生成且包含所有必须事件
+- [ ] STATE 4: 审阅通过
+- [ ] STATE 4: 叙事表现门禁通过或已完成小修
+- [ ] STATE 5: state、canon 和 open_loops 已更新
+- [ ] STATE 5: 章节摘要、场景因果链、时间线、地点、战力资源、敌对势力行动和错误修复台账已更新
+- [ ] STATE 6: 确认推进到下一章或完结
+- [ ] 所有文件已写入正确路径
+- [ ] 未违反任何 P0/P1 规则
