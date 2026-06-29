@@ -1,6 +1,28 @@
 # Chapter Generation Cycle
 
-单章完整生成循环。从 STATE 2 到 STATE 6。此模板用于人工单章生成，也可作为后续每日 3-10 章自动化的最小循环单元。
+单章完整生成循环。从运行启动协议到 STATE 2-6。此模板用于人工单章生成，也用于自动化任务；每次自动化任务只允许处理一个章节或一个 `pending_action`。
+
+## 单章自动化原则
+
+- 每次运行必须显式指定 `novel_id`。
+- 每次运行只生成 `run_control.next_chapter_to_generate` 指向的一个章节。
+- 每次运行开始时必须先读取 `novels/{novel_id}/state/current-state.md` 的 `运行控制` 区块。
+- 如果 `pending_action != none`，本次运行只处理该待办动作，不得进入 STATE 2。
+- 如果上次运行未完成到 STATE_6，必须先执行断点恢复，不得重新规划或覆盖已有文件。
+- 如果发现章节文件、chapter_plan 或 review 已存在但 state 未推进，必须进入恢复检测。
+- 运行结束必须更新 `run_control` 并写入单章运行日志。
+
+## 运行启动协议
+
+正式进入 STATE 2 前，必须先按 `system/templates/run-start-protocol.md` 执行：
+
+1. 读取 state 的运行控制字段，确认 `next_chapter_to_generate`。
+2. 检查 `run_lock`。若为 locked 且未确认旧运行已结束或超时，不得继续。
+3. 若可继续，设置本次运行锁，并记录锁定时间和原因。
+4. 检查 `pending_action`。若不为 none，转入对应模板或修复流程。
+5. 检查 `last_run_status` 和 `last_run_completed_state`。若上次运行为 partial 或未到 STATE_6，从断点恢复。
+6. 检查目标章节的 plan、正文、review 文件是否已存在，避免重复生成或覆盖。
+7. 通过前置条件后，才允许进入 STATE 2。
 
 ## 前置条件
 
@@ -17,13 +39,17 @@
 - 当前 Arc 的章节级关系线节拍已明确
 - 当前 Arc 的章节级事实显露、误导、维持或揭露节点已明确
 - 当前 state 文件已更新到最新章节
+- 当前 state 已包含 `运行控制` 区块，且 `next_chapter_to_generate = last_completed_chapter + 1`
+- 当前 `run_lock` 为 clear，或已确认旧锁可解除
+- 当前 `pending_action` 为 none
+- `last_run_status` 不是 partial，且 `last_run_completed_state` 可恢复到本次合法起点
 - 当前 state 文件的最近章节摘要、时间线、地点、人物位置、战力资源、敌对势力行动、质量风险和错误修复台账已更新到最新章节
 - 当前 canon/facts 文件已更新到最新章节
 - 当前 open_loops 文件已更新到最新章节
 - 当前无阻塞级错误修复提案；如有，必须先完成内容补齐或重新规划
 - 上一章 review 通过（第一章除外）
 
-缺少任一项，停止章节生成，回到内容补齐。
+缺少任一项，停止章节生成，将 `pending_action` 设置为 content_fill、repair、plan_adjust、stage_review_5ch、stage_review_20ch、arc_transition 或 volume_transition，并写明 `pending_action_reason`。
 
 ## 必读方法论
 
@@ -178,10 +204,10 @@
 ### 判定
 
 - 综合分 >= 7.5 且核心维度 >= 6 → 进入 STATE 5
-- 综合分 7.0-7.4 → 小修后进入 STATE 5
+- 综合分 7.0-7.4 → 进入 STATE 4b 小修；小修复核通过后进入 STATE 5
 - 综合分 < 7 或核心维度 < 5 → 返回 STATE 3 重写
 - 叙事表现评分任一项 < 5 → 返回 STATE 3 重写对应场景
-- 叙事表现评分任一项为 5-6 → 小修后进入 STATE 5
+- 叙事表现评分任一项为 5-6 → 进入 STATE 4b 小修；小修复核通过后进入 STATE 5
 - 存在阻塞级逻辑问题 → 返回 STATE 2 重新规划
 - 存在未建档关键人物或未预设重大命运转折 → 停止正文流程，回到人物画像补齐
 - 存在未登记或未预设关系线重大推进 → 停止正文流程，回到关系线台账和 Volume / Arc 编排补齐
@@ -191,6 +217,36 @@
 - 正文字数低于 min_chars 15% 以上 → 返回 STATE 3 扩写有效场景
 - 正文字数高于 max_chars 20% 且非高潮/终章 → 返回 STATE 3 压缩或拆章
 - 第一章开篇额外项低于 7 → 不允许作为自动化续写起点
+
+重写与小修限制：
+
+- STATE 3 重写最多 3 次；超限后设置 `pending_action: repair` 或 `pending_action: plan_adjust`，不得继续消耗本次运行。
+- STATE 4b 小修最多 2 次；超限后降级为重写或阻塞修复。
+- 任一阻塞级问题不得进入 STATE 5。
+
+## STATE 4b: 小修复核
+
+### 触发条件
+
+- Reviewer 判定综合分 7.0-7.4。
+- 叙事表现任一项为 5-6，且问题可通过局部修订解决。
+- Review 明确列出可执行的小修项，且不涉及改写核心事实、人物命运、关系性质或世界规则。
+
+### 操作
+
+由 Writer AI 只按 review 指定范围修改正文，不得新增 chapter_plan 未声明的事件、人物、关系推进、事实显露或战力资源变化。
+
+### 输出
+
+- 覆盖或更新 `novels/{novel_id}/chapters/ch-{N}.md`
+- 更新 `novels/{novel_id}/chapters/ch-{N}-review.md`，记录小修项、复核结论和是否允许进入 STATE 5
+
+### 验证
+
+- [ ] 小修没有改变 chapter_plan 的核心结构
+- [ ] 小修没有改写已登记事实、关系线、人物命运或世界规则
+- [ ] 小修后对应评分项达到通过线
+- [ ] 小修次数不超过 2 次
 
 ## STATE 5: 状态更新
 
@@ -204,6 +260,7 @@
 - 当前 Volume / Arc
 - 当前 Volume / Arc 的关系线编排
 - 当前 Volume / Arc 的事实显露计划
+- 当前 state 的运行控制字段
 
 ### 操作
 
@@ -217,7 +274,8 @@
 - 更新 state / cast 中已推进的关系线状态、触发事件、信任度或关系强度变化、下一计划节点
 - 更新 `novels/{novel_id}/open-loops/loops.md`
 - 更新章节摘要、场景因果链、时间线、地点、人物位置、战力资源、敌对势力行动、质量风险和错误修复台账
-- 如存在批次任务，更新 `novels/{novel_id}/runs/{date}.md`
+- 更新 `运行控制`：`last_completed_chapter`、`next_chapter_to_generate`、`last_run_status`、`last_run_completed_state`、`pending_action`、`run_lock` 和 `recovery_note`
+- 写入单章运行日志 `novels/{novel_id}/runs/ch-{N}-{date}.md`
 
 ### 验证
 
@@ -237,17 +295,22 @@
 - [ ] 场景因果链已记录本章关键前因、选择、结果和后续影响
 - [ ] 质量风险与错误修复台账已更新；阻塞级问题不得留到下一章
 - [ ] 下一章目标承接本章 ending_hook
+- [ ] 运行控制字段已同步，且本次运行结束时 `run_lock` 已清除
+- [ ] 单章运行日志已写入
 
 ## STATE 6: 循环推进
 
-更新 lifecycle_state 为 STATE_6，然后：
+先确认本次章节循环已完成到 STATE_6，并将 `last_run_completed_state` 写为 STATE_6。随后执行单章推进判定，并把 `lifecycle_state` 设置为下一次运行入口：
 
-- 如果还有下一章 → 将 lifecycle_state 重置为 STATE_2，开始下一轮
-- 如果当前 Arc 完成 → 先补齐下一 Arc 人物门禁、关系线编排和事实显露节拍，再生成下一个 Arc 的章节概要
-- 如果当前 Volume 完成 → 先补齐下一 Volume 人物配置、命运、关系线编排和事实显露计划，再生成下一个 Volume 的目标与压力阶梯
-- 如果最近 3-5 章无明显局势变化 → 暂停批量推进，先调整下一章 chapter_plan
-- 如果最近 10-20 章剧情单元未闭环 → 暂停批量推进，先补齐单元收束或压力升级计划
-- 如果全书完成 → 标记为完结
+- 如果全书完成 → 设置 `pending_action: completed`，`lifecycle_state = STATE_6`
+- 如果当前 Volume 完成 → 设置 `pending_action: volume_transition`，下次运行按 `system/templates/arc-transition.md` 处理 Volume 过渡
+- 如果当前 Arc 完成 → 设置 `pending_action: arc_transition`，下次运行按 `system/templates/arc-transition.md` 处理 Arc 过渡
+- 如果最近 10-20 章剧情单元未闭环 → 设置 `pending_action: stage_review_20ch`
+- 如果最近 3-5 章无明显局势变化或爽点重复明显 → 设置 `pending_action: stage_review_5ch` 或 `plan_adjust`
+- 如果存在未处理阻塞级修复 → 设置 `pending_action: repair`
+- 如果以上均无 → 设置 `pending_action: none`，`next_chapter_to_generate = current_chapter + 1`，`lifecycle_state = STATE_2`
+
+STATE 6 不得在同一次章节运行内直接展开下一章、下一 Arc 或下一 Volume。它只负责写清下一次运行的路由。
 
 ## 完整循环检查清单
 
@@ -257,6 +320,6 @@
 - [ ] STATE 4: 叙事表现门禁通过或已完成小修
 - [ ] STATE 5: state、canon 和 open_loops 已更新
 - [ ] STATE 5: 章节摘要、场景因果链、时间线、地点、战力资源、敌对势力行动和错误修复台账已更新
-- [ ] STATE 6: 确认推进到下一章或完结
+- [ ] STATE 6: 已设置下一次运行路由、运行控制字段和单章运行日志
 - [ ] 所有文件已写入正确路径
 - [ ] 未违反任何 P0/P1 规则

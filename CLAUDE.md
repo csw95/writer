@@ -76,7 +76,10 @@ writer/
 │   │   └── scoring.schema.md
 │   └── templates/                  # 操作模板
 │       ├── novel-init.md           # 初始化新小说
-│       └── chapter-cycle.md        # 章节生成循环
+│       ├── chapter-cycle.md        # 单章生成循环
+│       ├── run-start-protocol.md   # 单章自动化启动、路由和恢复协议
+│       ├── arc-transition.md       # Arc / Volume 过渡协议
+│       └── stage-review.md         # 阶段审稿协议
 ├── novels/                         # 小说实例（强隔离）
 │   └── <novel_id>/                 # 每本小说独立目录
 │       ├── bible/premise.md
@@ -119,9 +122,9 @@ writer/
   STATE 6: 进入下一章循环
 ```
 
-### 3. 开篇与自动化门禁
+### 3. 开篇与单章自动化门禁
 
-在任何每日 3-10 章自动化任务前，必须先补齐：
+每次自动化任务只允许处理一个章节或一个 `pending_action`。在任何单章自动化任务前，必须先读取 `system/templates/run-start-protocol.md`，再补齐：
 
 - `bible/premise.md`：一句话卖点、类型承诺、读者期待、黄金三章目标、篇幅档位、目标章数、单章字数范围、目标总字数
 - `world/worldbuilding.md`：世界基础规则、力量/能力体系、资源体系、社会结构、势力体系、关键地点、历史背景、代价体系、禁止事项、开篇显露策略
@@ -133,7 +136,15 @@ writer/
 - `state/current-state.md`：当前剧情、时间线、地点、人物、战力资源、敌对势力、章节摘要、质量风险和错误修复台账
 - `open-loops/loops.md`：伏笔台账格式
 
-缺少以上任一项，只允许进行内容补齐，不允许批量生成章节。
+缺少以上任一项，只允许进行内容补齐，不允许生成章节。
+
+每次自动化运行开始前，必须先检查 `state/current-state.md` 的 `运行控制` 区块：
+
+- `run_lock` 必须可用；若为 locked 且无法确认旧运行已结束，不得继续。
+- `pending_action` 不为 none 时，只处理该待办动作，不得进入章节生成。
+- `last_run_status` 为 partial 或 `last_run_completed_state` 未到 STATE_6 时，必须先断点恢复。
+- `next_chapter_to_generate` 必须等于 `last_completed_chapter + 1`。
+- STATE 6 只写入下一次运行路由，不得在同一次自动化任务中继续生成下一章。
 
 开篇正文不得用百科式世界观开场。世界观允许在合适时机进行必要的局部说明，但必须服务当前场景，并通过章节中的冲突、压迫、选择、代价和异常逐步显露。
 

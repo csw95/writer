@@ -35,9 +35,9 @@
 | STATE 4 审阅 | 类型承诺、节奏、连贯性、伏笔、钩子 | review |
 | STATE 5 状态更新 | 状态连续性、伏笔回收、变量变化 | state、open_loops |
 
-## 自动化前置门禁
+## 单章自动化前置门禁
 
-任何每日 3-10 章自动化任务开始前，指定 `novel_id` 必须具备：
+任何单章自动化任务开始前，指定 `novel_id` 必须先通过 `system/templates/run-start-protocol.md`，并具备：
 
 - `bible/premise.md` 已完整填写
 - `bible/premise.md` 已声明 channel / category / subcategory / tags
@@ -52,5 +52,7 @@
 - 当前 Volume / Arc 已定义本阶段关系线编排，且章节级关系节拍已明确
 - `open-loops/loops.md` 具备伏笔台账格式
 - 前三章目标已规划，或至少第一章 chapter_plan 已通过审阅
+- `state/current-state.md` 已包含运行控制字段，且 `pending_action` 已正确路由
+- `run_lock` 可用，且上次运行不是未恢复的 partial 状态
 
-缺少以上任一项，只允许进行内容补齐，不允许批量生成章节。
+缺少以上任一项，只允许进行内容补齐、恢复或待办动作处理，不允许生成章节。

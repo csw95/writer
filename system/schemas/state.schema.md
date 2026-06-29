@@ -8,8 +8,18 @@
 |------|------|------|------|
 | novel_id | string | ✅ | 小说唯一标识 |
 | current_chapter | integer | ✅ | 当前章节编号 |
-| lifecycle_state | enum | ✅ | STATE_0 ~ STATE_6 |
+| lifecycle_state | enum | ✅ | STATE_0 ~ STATE_6；当前流程状态或下一次运行入口 |
 | last_updated | timestamp | ✅ | 最后更新时间 |
+| run_control.next_chapter_to_generate | integer | ✅ | 下一次章节生成应处理的章节编号 |
+| run_control.last_completed_chapter | integer | ✅ | 已完成 STATE_6 并完成状态更新的最新章节编号 |
+| run_control.last_run_status | enum | ✅ | not_started/success/partial/blocked/skipped |
+| run_control.last_run_completed_state | enum | ✅ | STATE_0 ~ STATE_6；用于断点恢复 |
+| run_control.pending_action | enum | ✅ | none/content_fill/repair/plan_adjust/stage_review_5ch/stage_review_20ch/arc_transition/volume_transition/completed |
+| run_control.pending_action_reason | string | ✅ | 下一次运行必须优先处理的原因；无则写“无” |
+| run_control.run_lock.status | enum | ✅ | clear/locked |
+| run_control.run_lock.locked_at | timestamp/null | ✅ | 加锁时间；clear 时写 N/A |
+| run_control.run_lock.lock_reason | string | ✅ | 加锁原因；clear 时写“无” |
+| run_control.recovery_note | string | ✅ | 若上次运行中断，说明应从哪个 STATE 恢复；无则写“无” |
 | classification.channel | enum | ✅ | 男频/女频/通用 |
 | classification.category | string | ✅ | 主大类 |
 | classification.subcategory | string | ✅ | 细分类 |
@@ -73,6 +83,41 @@
   "chapter_char_range": "2500-3500"
 }
 ```
+
+## RunControl 结构
+
+```json
+{
+  "next_chapter_to_generate": 2,
+  "last_completed_chapter": 1,
+  "last_run_status": "success",
+  "last_run_completed_state": "STATE_6",
+  "pending_action": "none",
+  "pending_action_reason": "无",
+  "run_lock": {
+    "status": "clear",
+    "locked_at": "N/A",
+    "lock_reason": "无"
+  },
+  "recovery_note": "无"
+}
+```
+
+`pending_action` 路由规则：
+
+| 值 | 下一次运行动作 |
+|----|----------------|
+| none | 按 `chapter-cycle.md` 生成 `next_chapter_to_generate` 指向的章节 |
+| content_fill | 暂停章节生成，补齐 premise/world/characters/canon/volume/arc/state/open_loops 缺项 |
+| repair | 暂停章节生成，先处理 `repair_log` 中未解决的阻塞或高风险问题 |
+| plan_adjust | 暂停章节生成，先调整下一章 chapter_plan 或后续 3-5 章节奏 |
+| stage_review_5ch | 执行最近 3-5 章阶段审稿 |
+| stage_review_20ch | 执行最近 10-20 章剧情单元审稿 |
+| arc_transition | 补齐下一 Arc 的人物门禁、关系线编排、事实显露节拍和章节概要 |
+| volume_transition | 补齐下一 Volume 的人物配置、命运线、关系线编排、事实显露计划和压力阶梯 |
+| completed | 全书已完成，不再生成新章 |
+
+运行开始时必须先读取 `run_control`。若 `run_lock.status = locked` 且锁未超过人工设定的超时窗口，不得继续生成章节。若存在 `pending_action != none`，必须先执行对应动作，不得直接进入 STATE 2。
 
 ## ChapterSummary 结构
 
@@ -283,3 +328,9 @@
 18. scene_causal_chains 必须记录最新章节关键场景的前因、行动选择、结果变化和后续影响。
 19. quality_risks 必须追踪最近 3-5 章局势变化、最近 10-20 章剧情单元状态和主要连载风险。
 20. repair_log 不得存在未处理的阻塞级问题进入下一章循环。
+21. next_chapter_to_generate 必须等于 last_completed_chapter + 1，除非 pending_action 为 completed。
+22. last_completed_chapter 必须小于等于 current_chapter；如果存在章节文件但 state 未推进，必须进入恢复检测。
+23. last_run_status 为 partial 时，下一次运行必须优先执行断点恢复；last_run_completed_state 不是 STATE_6 时，只有 STATE_0/STATE_1 初始化状态或明确 pending_action 路由可继续。
+24. pending_action 不为 none 时，不得生成新章节；必须先执行对应补齐、修复、审稿或过渡流程。
+25. run_lock.status 为 locked 时，不得启动新的章节循环；只有确认旧运行已结束、超时或人工解除后才能继续。
+26. 每次 STATE 6 完成后必须写入单章运行日志，并同步 last_run_status、last_run_completed_state、pending_action 和 recovery_note。

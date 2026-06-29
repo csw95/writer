@@ -4,6 +4,18 @@
 > 当前章节: 0
 > 生命周期状态: STATE_0
 
+## 运行控制
+- **next_chapter_to_generate（下一次应生成章节）**: 1
+- **last_completed_chapter（已完成章节）**: 0
+- **last_run_status（上次运行状态）**: not_started
+- **last_run_completed_state（上次完成状态）**: STATE_0
+- **pending_action（待处理动作）**: none
+- **pending_action_reason（待处理原因）**: 无
+- **run_lock.status（运行锁）**: clear
+- **run_lock.locked_at（锁定时间）**: N/A
+- **run_lock.lock_reason（锁定原因）**: 无
+- **recovery_note（恢复说明）**: 无
+
 ## 当前剧情阶段
 - **当前 Volume**: 未开始
 - **当前 Arc**: 未开始

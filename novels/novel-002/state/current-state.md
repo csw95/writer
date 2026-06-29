@@ -7,6 +7,18 @@
 - **lifecycle_state**: STATE_1（结构已生成，等待第一章规划）
 - **last_updated**: 2026-06-29（世界观和人物画像已按更新规范丰富）
 
+## 运行控制
+- **next_chapter_to_generate（下一次应生成章节）**: 1
+- **last_completed_chapter（已完成章节）**: 0
+- **last_run_status（上次运行状态）**: success
+- **last_run_completed_state（上次完成状态）**: STATE_1
+- **pending_action（待处理动作）**: content_fill
+- **pending_action_reason（待处理原因）**: 完整开篇门禁仍待确认，确认前不得启动第一章生成
+- **run_lock.status（运行锁）**: clear
+- **run_lock.locked_at（锁定时间）**: N/A
+- **run_lock.lock_reason（锁定原因）**: 无
+- **recovery_note（恢复说明）**: 无
+
 ## 分类定位
 - **channel**: 男频
 - **category**: 科幻
@@ -97,7 +109,14 @@
 - [x] 灰烬遗言三层解锁节奏已锁定（世界规则→premise→arc→事实库统一）
 - [x] 黄金三章降颗粒度——Ch3 不再包含伪装死亡、逃脱者后裔完整揭示、标记改写装置
 - [x] 源质烧伤首次出现时间从 Ch29-30 后移至 Ch80-100
+- [x] v4 评估 P1-1: FACT-036 true_fact/impact_scope 源质烧伤时间轴已修正为 Ch80-100
+- [x] v4 评估 P1-2: long-term-arc Volume 拆分灰烬遗言解锁节奏已同步
+- [x] v4 评估 P1-3: Arc 001 触及表 FACT-011 Ch30 已降级为"暗示"而非"揭示核心事实"
+- [x] v4 评估 P1-4: FACT-003/006 first_hint/knowledge_state Ch2 已改为"不稳定感知后遗症"
+- [x] v4 评估 P2-1: LOOP-010 Fact 绑定已修正为 FACT-012, FACT-005, FACT-011
+- [x] v4 评估 P2-2: long-term-arc 三幕式第一幕遗址回收时间已修正
+- [ ] 完整开篇门禁: 待 v4 全部修正完成后由下次评估确认
 
 ---
 *初始化于 2026-06-29 / STATE_1*
-*修订于 2026-06-29 — 按开篇设定评估结果执行时间轴、解锁规则、黄金三章、LOOP ID 四项修订*
+*修订于 2026-06-29 — 按开篇设定评估 v4 结果执行：FACT-036 时间轴、long-term-arc Volume 拆分、Arc 001 触及表 FACT-011、FACT-003/006 灰烬视觉表述、LOOP-010 Fact 绑定、三幕式遗址时间共 6 项修正*
