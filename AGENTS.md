@@ -85,13 +85,17 @@ writer/
 │       ├── bible/premise.md
 │       ├── world/worldbuilding.md
 │       ├── characters/cast.md
+│       ├── characters/cast-active.md     # 当前 Arc 活跃人物轻量索引
 │       ├── canon/facts.md
+│       ├── canon/facts-active.md         # 当前 Arc 活跃事实轻量索引
 │       ├── structure/
 │       │   ├── long-term-arc.md
+│       │   ├── parts/              # ultra_long 必填：Part 级大阶段
 │       │   ├── volumes/
 │       │   ├── arcs/
 │       │   └── chapter-plans/
 │       ├── state/current-state.md
+│       ├── state/archive/           # 历史状态归档，避免 current-state 膨胀
 │       ├── open-loops/loops.md
 │       ├── chapters/
 │       └── runs/
@@ -126,22 +130,36 @@ writer/
 
 每次自动化任务只允许处理一个章节或一个 `pending_action`。在任何单章自动化任务前，必须先读取 `system/templates/run-start-protocol.md`，再补齐：
 
-- `bible/premise.md`：一句话卖点、类型承诺、读者期待、黄金三章目标、篇幅档位、目标章数、单章字数范围、目标总字数
+- `bible/premise.md`：书名、平台上架信息（500字以内作品简介、平台标签、点击信号）、一句话卖点、类型承诺、读者期待、黄金三章目标、篇幅档位、目标章数、单章字数范围、目标总字数
 - `world/worldbuilding.md`：世界基础规则、力量/能力体系、资源体系、社会结构、势力体系、关键地点、历史背景、代价体系、禁止事项、开篇显露策略
 - `characters/cast.md`：主角 Want/Need/Lie/Wound、核心配角、敌对势力、关系网、人物分级、登场前最小画像、阶段命运方向、新增人物规则
+- `characters/cast-active.md`：当前 Part / Volume / Arc 的活跃人物、即将入场人物和休眠人物索引
 - `canon/facts.md`：幕后事实台账、历史关键事实、暗线真相、身份秘密、能力/物品/制度真相、公开版本、知情状态、显露窗口、禁止改写项、关联伏笔
+- `canon/facts-active.md`：当前 Part / Volume / Arc 的活跃 Fact、即将触发事实和暂不触碰事实索引
 - `structure/long-term-arc.md`：全书阶段目标、冲突升级路线、节奏审稿节点、主要人物长期命运线、全书关系线主次规划
+- `structure/parts/part-001.md`：超长篇 Part 级目标、地图/阶层/规则跃迁、关键 Volume、人物命运、关系线、事实显露和伏笔计划
 - `structure/volumes/volume-001.md`：第一卷目标、人物配置与命运、关系线编排、反派主动计划、压力阶梯、伏笔计划
 - `structure/arcs/arc-001.md`：按篇幅档位规划的第一 Arc 目标、Arc 人物门禁、章节级关系线节拍、3-5章节奏窗口
 - `state/current-state.md`：当前剧情、时间线、地点、人物、战力资源、敌对势力、章节摘要、质量风险和错误修复台账
+- `state/archive/`：归档超过活跃窗口的历史摘要、场景因果链、资源变化、Fact/Loop/REL 变化和已解决修复项
 - `open-loops/loops.md`：伏笔台账格式
 
 缺少以上任一项，只允许进行内容补齐，不允许生成章节。
+
+新小说初始化和开篇前，必须在 `bible/premise.md` 写入 `平台上架信息`：
+
+- **上架书名**：短、清晰、有类型信号；不得用与正文卖点不符的标题骗点击。
+- **作品简介**：500字以内，必须包含主角身份 / 极端处境、核心冲突、特殊优势或高概念、长期目标和追读钩子；不得百科式罗列世界观，不得剧透终局反转。
+- **平台标签**：3-6个，优先从目标平台可选标签或 `system/methodology/novel-categories.md` 标签库选择；优先覆盖主角标签、结构/爽点标签、世界标签和节奏标签。
+- **点击信号**：书名、简介和平台标签必须共同指向同一批可感知卖点；内部设定词可作为卖点标签保留，但目标平台无对应标签时不得强行写入平台标签。
+
+单章运行优先读取 `cast-active.md` 和 `facts-active.md` 作为轻量上下文；当本章涉及 active 文件未覆盖的人物或 Fact 时，必须按 `system/templates/active-context-refresh.md` 刷新 active 文件，或读取完整 `cast.md` / `facts.md` 的对应条目并同步补齐 active 文件。
 
 每次自动化运行开始前，必须先检查 `state/current-state.md` 的 `运行控制` 区块：
 
 - `run_lock` 必须可用；若为 locked 且无法确认旧运行已结束，不得继续。
 - `pending_action` 不为 none 时，只处理该待办动作，不得进入章节生成。
+- `pending_action = state_archive` 时，只执行状态归档，不得生成章节。
 - `last_run_status` 为 partial 或 `last_run_completed_state` 未到 STATE_6 时，必须先断点恢复。
 - `next_chapter_to_generate` 必须等于 `last_completed_chapter + 1`。
 - STATE 6 只写入下一次运行路由，不得在同一次自动化任务中继续生成下一章。
@@ -151,6 +169,10 @@ writer/
 任何会命名、反复登场、改变冲突结果、影响主角选择或承担伏笔功能的人物，必须先在 `characters/cast.md` 建立人物纲要；每个 Volume / Arc 等大情节开始前，必须确认本阶段关键人物画像和命运方向。人物可在后续篇章逐渐丰富，但不得在正文中临时新增关键人物或临场改写命运。
 
 情感线、手足线、同袍线、师徒线、敌友线和阵营信任线必须按 `system/methodology/relationship-lines.md` 提前确定主次。凡会影响主角选择、阵营站位、证据链、牺牲、背叛、离队、救赎或恋爱推进的关系线，必须在 long-term-arc、当前 Volume、当前 Arc 和对应 chapter_plan 中提前编排；不得在正文中临场升温、确认、决裂或改写关系性质。
+
+`ultra_long` 必须额外维护 Part 层。Part 完成时只能设置 `pending_action: part_transition`，按 `system/templates/part-transition.md` 补齐下一 Part；不得在同一次单章运行中直接展开下一 Part 或继续生成下一章。
+
+`state/current-state.md` 只保留活跃窗口和当前运行所需状态：最近 20 章章节摘要、最近 10 章场景因果链、当前活跃关系/事实/伏笔和未解决修复项。更早的章节摘要、场景因果链、时间地点变化、人物关系变化、战力资源变化、Fact 显露、LOOP 变化和已解决修复项必须按 `system/templates/state-archive.md` 归档到 `state/archive/`，并在 current-state 保留归档索引。
 
 幕后事实、历史关键事件、身份秘密、能力真相、阵营隐情、物品真相和制度底层规则必须按 `system/methodology/canon.md` 提前进入 `canon/facts.md`。凡会影响主角选择、阵营站位、人物动机、证据链、能力代价、伏笔回收、反转或终局因果的事实，必须拥有稳定 `FACT-*`；chapter_plan 引用相关暗线时必须标明 Fact ID。正文可以误导读者或只显露局部，但不得违背事实库，不得让角色知道未显露事实，不得临场改写核心真相。
 

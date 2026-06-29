@@ -23,6 +23,16 @@
 - `system/methodology/genre-promises.md`
 - 第一章额外遵守 `system/methodology/opening.md`
 
+## 按需方法论
+
+- 主题推进/回收：读取 `system/methodology/theme.md`
+- 子情节新增/休眠/回收：读取 `system/methodology/subplots.md`
+- 对话主导章节：读取 `system/methodology/dialogue.md`
+- 角色死亡/离队/长期缺席/背叛/洗白：读取 `system/methodology/character-exit.md`
+- 多 POV：读取 `system/methodology/multi-pov.md`
+- 呼吸章：读取 `system/methodology/breathing-chapters.md`
+- 100+ 章接力或 active 文件刷新：读取 `system/methodology/context-compression.md`
+
 ## 输入
 
 每次调用你将收到：
@@ -31,10 +41,13 @@
 - `premise`: `novels/{novel_id}/bible/premise.md`
 - `world`: `novels/{novel_id}/world/worldbuilding.md`
 - `characters`: `novels/{novel_id}/characters/cast.md`
+- `active_characters`: `novels/{novel_id}/characters/cast-active.md`（优先读取）
 - `canon`: `novels/{novel_id}/canon/facts.md`
+- `active_canon`: `novels/{novel_id}/canon/facts-active.md`（优先读取）
 - 当前 `state`: `novels/{novel_id}/state/current-state.md`
 - 当前 `open_loops`: `novels/{novel_id}/open-loops/loops.md`
 - `long_term_arc`
+- 当前 `part`（ultra_long 必填）
 - `premise` 中的 channel、category、subcategory、tags
 - `premise` 中的 length_tier、target_chapters、target_chapter_chars、target_total_chars
 - 当前 `volume`

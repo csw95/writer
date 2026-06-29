@@ -13,6 +13,10 @@
   细分类: <凡人流/都市异能/女强权谋/豪门总裁/...>
   交叉分类: <可选，最多2个>
   标签: <2-6个卖点标签，如系统/重生复仇/打脸/甜宠/权谋>
+  上架书名: <默认同 title，可优化但不得误导核心卖点>
+  作品简介: <500字以内，可由系统根据 premise 自动生成>
+  平台标签: <3-6个目标平台可选标签，优先来自标签库>
+  点击信号: <书名/简介/标签共同突出的1-3个点击卖点>
   篇幅档位: <short/medium/long/ultra_long，默认 medium>
   目标章数: <按篇幅档位：short 30-60 / medium 80-180 / long 200-500 / ultra_long 1000-3000+>
   单章正文字数: <按篇幅档位：short 2000-3000 / medium 2500-3500 / long 3000-4000 / ultra_long 2500-4000>
@@ -34,6 +38,9 @@
 - `system/methodology/characters.md`
 - `system/methodology/relationship-lines.md`
 - `system/methodology/canon.md`
+- `system/methodology/theme.md`
+- `system/methodology/subplots.md`
+- `system/methodology/context-compression.md`
 
 ## STATE 0: 内容补齐初始化
 
@@ -46,10 +53,12 @@ novels/<novel_id>/
   characters/
   canon/
   structure/
+    parts/
     volumes/
     arcs/
     chapter-plans/
   state/
+    archive/
   open-loops/
   chapters/
   runs/
@@ -73,6 +82,13 @@ novels/<novel_id>/
 - **章节字数范围**: {min_chars}-{max_chars}
 - **目标总字数**: {target_total_chars}
 - **核心读者期待**: {读者想持续看到什么}
+
+## 平台上架信息
+- **上架书名**: {platform_title，默认同 title；要求短、清晰、有类型信号，不得误导}
+- **作品简介（500字以内）**: {主角身份 + 极端处境 + 核心冲突 + 特殊优势/高概念 + 长期目标 + 追读钩子}
+- **平台标签**: [{3-6个目标平台可选标签，优先来自 `novel-categories.md` 标签库}]
+- **点击信号**: {书名、简介和平台标签共同承诺的1-3个可感知卖点}
+- **标签合规检查**: {平台标签是否来自目标平台或标签库；内部设定词是否只作为卖点而非平台标签}
 
 ## 分类定位
 - **channel**: {男频/女频/通用}
@@ -255,6 +271,10 @@ novels/<novel_id>/
 |---------|--------------|----------|--------------|--------------|--------------|
 ```
 
+### Step 0.4b: 生成活跃事实索引（canon/facts-active.md）
+
+按 `novels/_template/canon/facts-active.md` 初始化当前 Part / Volume / Arc 涉及事实、即将触发事实和暂不触碰事实。该文件只做轻量索引，不替代完整 `canon/facts.md`。
+
 ### Step 0.5: 生成角色系统（characters/cast.md）
 
 ```markdown
@@ -364,11 +384,16 @@ novels/<novel_id>/
 - 正文生成阶段不得临时新增关键人物；如确需新增，先回到内容补齐。
 ```
 
+### Step 0.5b: 生成活跃人物索引（characters/cast-active.md）
+
+按 `novels/_template/characters/cast-active.md` 初始化当前 Part / Volume / Arc 活跃人物、即将入场人物和休眠人物。该文件只做轻量索引，不替代完整 `characters/cast.md`。
+
 ### Step 0.6: 初始化状态文件（state/current-state.md）
 
 状态文件必须符合 `system/schemas/state.schema.md`，并写入分类定位、第一章目标和以下运行台账：
 
 - 最近章节摘要台账（初始化为空，后续每章追加）。
+- State 归档索引（初始化为空，`current-state.md` 只保留活跃窗口，历史明细写入 `state/archive/`）。
 - 当前时间线、地点、人物位置和移动/通信成本。
 - 主角与关键人物战力、资源、伤势、情绪、声望和目标状态。
 - 敌对势力当前行动、威胁等级、误判点和下一步压力。
@@ -378,7 +403,7 @@ novels/<novel_id>/
 
 ### Step 0.7: 初始化伏笔文件（open-loops/loops.md）
 
-伏笔文件必须使用“埋设章节 / 表面作用 / 真正作用 / 关联事实 / 计划回收 / 最晚回收 / 当前状态”格式。长期伏笔必须能绑定至少一个 `FACT-*` 或明确未来答案。
+伏笔文件必须符合 `system/schemas/open-loops.schema.md`，使用“埋设章节 / 表面作用 / 真正作用 / 关联事实 / 计划回收 / 最晚回收 / 当前状态”格式。长期伏笔必须能绑定至少一个 `FACT-*` 或明确未来答案。
 
 ## STATE 1: 结构生成
 
@@ -414,6 +439,22 @@ novels/<novel_id>/
 - **爽点轮换策略**: {不同阶段主要快感如何轮换，避免连续重复}
 - **长期伏笔回收节奏**: {跨卷伏笔如何分批暗示、误导、部分揭露、回收}
 
+## 主题追踪
+- **核心主题问题**: {这本书反复拷问什么}
+- **主角初始答案**: {主角一开始相信什么}
+- **主角终局答案**: {主角最终要抵达什么理解}
+- **反方答案**: {敌人或制度代表的错误答案}
+- **禁止说教方式**: {不得通过哪些直白方式讲主题}
+
+## 子情节索引
+| 子情节ID | 名称 | 状态 | 服务主线方式 | 启动章节 | 并回主线窗口 | 关联人物/Fact/Loop |
+|----------|------|------|--------------|----------|--------------|--------------------|
+
+## 上下文压缩策略
+- **active 文件刷新节点**: {Arc/Volume/Part 过渡、关键人物变化、Fact 窗口变化}
+- **state 归档节点**: {超过窗口、Arc 完成、80KB 阈值}
+- **阶段摘要频率**: {每 50 章/每 Arc/每 Volume}
+
 ## 阶段审稿节点
 | 节点 | 章节范围 | 审稿重点 | 必须处理的问题 |
 |------|----------|----------|----------------|
@@ -437,6 +478,8 @@ novels/<novel_id>/
   2. {Volume 002 — 目标}
 - **Part 终局事件**: {阶段高潮与收束}
 - **下一 Part 钩子**: {更大地图/敌人/规则问题}
+
+如 `length_tier = ultra_long`，还必须生成 `structure/parts/part-001.md`，并填入 Part 目标、地图/阶层/规则跃迁、核心敌人、关键 Volume、人物命运、关系线、事实显露、伏笔计划和 Part 终局。
 
 ## 主线分段
 ### 第一阶段: {名称}（Chapter 1 ~ {N}）
@@ -472,7 +515,37 @@ novels/<novel_id>/
 |---------|----------|----------|----------|--------------|----------|----------|
 ```
 
-### Step 1.2: 生成第一卷（structure/volumes/volume-001.md）
+### Step 1.2: 生成第一 Part（structure/parts/part-001.md，仅 ultra_long）
+
+`ultra_long` 必须生成 `structure/parts/part-001.md`。非 ultra_long 可跳过。
+
+```markdown
+# Part 001 — {Part名称}（Chapter 1 ~ {N}）
+
+## Part 目标
+{这个 Part 必须完成的大阶段目标}
+
+## 起点与终点
+- **起点状态**: {主角、世界、敌人、资源、关系、事实显露的起点}
+- **终点状态**: {Part 结束时必须达到的状态}
+- **阶段胜利条件**: {哪些结果代表 Part 成功收束}
+- **阶段失败/代价**: {Part 结束时必须留下的代价或新问题}
+
+## 地图 / 阶层 / 规则跃迁
+- **地图跃迁**:
+- **阶层跃迁**:
+- **势力规模跃迁**:
+- **世界规则认知跃迁**:
+
+## 关键 Volume 列表
+| Volume | 章节范围 | 卷目标 | 核心冲突 | 卷末状态 | 下一卷钩子 |
+|--------|----------|--------|----------|----------|------------|
+
+## Part 人物命运 / 关系线 / 事实 / 伏笔
+{必须按 `novels/_template/structure/parts/part-001.md` 补齐}
+```
+
+### Step 1.3: 生成第一卷（structure/volumes/volume-001.md）
 
 每个 Volume 必须遵守 `system/methodology/length-standards.md`：
 short 通常 15-30 章；medium 通常 30-60 章；long 通常 40-80 章；ultra_long 通常 80-150 章。
@@ -539,7 +612,7 @@ short 通常 15-30 章；medium 通常 30-60 章；long 通常 40-80 章；ultra
 - **不得修复方式**: {不得改写历史章节/不得临场改设定/不得靠巧合硬圆}
 ```
 
-### Step 1.3: 生成第一 Arc（structure/arcs/arc-001.md）
+### Step 1.4: 生成第一 Arc（structure/arcs/arc-001.md）
 
 每个 Arc 必须遵守 `system/methodology/length-standards.md`：
 short 通常 5-10 章；medium 通常 8-20 章；long 通常 10-30 章；ultra_long 通常 20-50 章。
@@ -592,14 +665,18 @@ short 通常 5-10 章；medium 通常 8-20 章；long 通常 10-30 章；ultra_l
 {Arc 结束时角色和世界应该处于什么状态}
 ```
 
-### Step 1.4: 更新状态
+### Step 1.5: 更新状态
 
 将 lifecycle_state 更新为 STATE_1，记录当前 Volume / Arc 信息。
 
 ## 初始化完成检查
 
 - [ ] premise 已完成一句话卖点、分类定位、类型承诺、黄金三章
+- [ ] premise 已完成平台上架信息：上架书名、500字以内作品简介、3-6个平台标签、点击信号和标签合规检查
 - [ ] premise 已定义长线稳定性目标、每 3-5 章局势变化要求、每 10-20 章剧情单元闭环要求和爽点轮换池
+- [ ] premise 或 long-term-arc 已定义核心主题问题、主角初始答案、终局答案和反方答案
+- [ ] long-term-arc 已初始化子情节索引，或明确第一 Arc 暂无子情节
+- [ ] long-term-arc 已定义 active 文件刷新节点、state 归档节点和阶段摘要频率
 - [ ] premise 已定义关系线主次原则，明确情感线、手足线、同袍线等是否存在及其主次
 - [ ] premise 已声明 channel / category / subcategory / tags，且符合 `novel-categories.md`
 - [ ] premise 已声明 length_tier、目标章数、单章字数范围、目标总字数
@@ -608,14 +685,17 @@ short 通常 5-10 章；medium 通常 8-20 章；long 通常 10-30 章；ultra_l
 - [ ] world 已定义时间规则、地点台账、移动/通信成本、战力/能力/资源约束和禁止临场补丁项
 - [ ] world 已定义开篇显露策略，第一章不得百科式开场，只能通过必要局部说明及冲突、压迫、选择、代价、异常逐步显露
 - [ ] characters 已定义主角 Want/Need/Lie/Wound、核心人物画像、人物分级、待入场人物池、人物命运台账和新增人物规则
+- [ ] characters/cast-active.md 已列出当前 Arc 活跃人物、即将入场人物和休眠人物
 - [ ] characters 已定义主要人物行为规则、反常选择触发条件、反派主动计划、误判点和底牌
 - [ ] canon 已登记影响主角选择、阵营站位、历史因果、能力代价、身份秘密、伏笔回收和终局因果的核心事实
 - [ ] canon 中每个核心事实都有稳定 Fact ID、真实事实、公开版本、知情状态、影响范围、首次暗示、揭露窗口和禁止改写项
+- [ ] canon/facts-active.md 已列出当前 Arc 活跃事实、即将触发事实和暂不触碰事实
 - [ ] characters 已建立关系线台账，长期关系线已标明ID、类型、优先级、阶段目标、触发条件和越界禁止
 - [ ] characters 已为第一卷/第一 Arc 关键人物确定阶段命运方向
 - [ ] long-term-arc 已拆出三幕、阶段目标、全书分类服务点、冲突升级路线、节奏审稿节点、主要人物长期命运线和全书关系线主次规划
 - [ ] long-term-arc 已规划全书级幕后事实、历史真相、身份秘密和主要揭露阶段
 - [ ] 如 length_tier = ultra_long，long-term-arc 已拆出 Part 级大阶段
+- [ ] 如 length_tier = ultra_long，structure/parts/part-001.md 已补齐 Part 目标、关键 Volume、人物命运、关系线、事实显露和伏笔计划
 - [ ] volume-001 已定义分类服务点、人物配置与命运、关系线编排、敌对势力主动计划、节奏审稿节点、压力阶梯和伏笔计划
 - [ ] volume-001 已定义本卷事实显露计划和揭露上限
 - [ ] arc-001 已按篇幅档位规划第一阶段章节，并定义分类服务点、人物门禁、章节级关系线节拍、事实显露节拍、敌对势力主动节拍和 3-5 章节奏窗口

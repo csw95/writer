@@ -2,6 +2,14 @@
 
 章节验证清单。在 STATE 4 审阅时使用，也可独立用于抽查已有章节。
 
+机器校验优先使用：
+
+```bash
+python3 tools/validate-novel.py <novel_id> --chapter <N>
+```
+
+该脚本用于检查 chapter_plan 必填字段、review 评分维度、state 活跃窗口/归档压力、Fact/Loop 交叉引用和评分权重漂移。人工清单用于补充判断叙事质量和修复建议。
+
 ## 快速验证（必查项）
 
 - [ ] **P0-隔离**: 本章未引用其他小说内容？
@@ -124,12 +132,14 @@
 - [ ] 长期伏笔绑定了对应 Fact ID 或明确未来答案？
 - [ ] 活跃伏笔无逾期未处理项？
 - [ ] state 的最近章节摘要、场景因果链、时间线、地点、战力资源、敌对势力行动和错误修复台账已更新？
+- [ ] state 的最近章节摘要只保留最近 20 章、场景因果链只保留最近 10 章，旧内容已归档到 state/archive？
 - [ ] open_loops 中新增伏笔有计划回收、最晚回收、逾期处理方案和关联 Fact ID 或明确未来答案？
 
 ## 自动化前置验证
 
 - [ ] premise、world、characters、long-term-arc、volume、arc 均已补齐？
 - [ ] canon/facts.md 已补齐，当前 Arc 涉及的 Fact ID、显露层级和揭露窗口清晰？
+- [ ] characters/cast-active.md 与 canon/facts-active.md 已覆盖当前 Arc 和后续 3-5 章？
 - [ ] premise 已声明 channel、category、subcategory、tags？
 - [ ] premise 已声明 length_tier、目标章数、章节字数范围、目标总字数？
 - [ ] 最新 review 通过？
@@ -142,6 +152,7 @@
 - [ ] 当前 Arc 后续至少3章敌对势力主动行动、场景功能和资源战力变化清晰？
 - [ ] 当前无未处理的阻塞级错误修复提案？
 - [ ] 本批次 run 日志已创建（如执行批量任务）？
+- [ ] 如 `python3 tools/validate-novel.py <novel_id> --chapter <N>` 未通过，已先处理阻塞项？
 
 ## 结果
 

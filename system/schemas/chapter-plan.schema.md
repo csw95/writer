@@ -64,6 +64,12 @@
 | variable_changes | VariableChange[] | ✅ | 剧情变量变化 |
 | downstream_impact | DownstreamImpact | ✅ | 本章结果对后续 3-5 章的影响 |
 | serial_risks | SerialRisk | ✅ | 连载风险 |
+| theme_operation | ThemeOperation | 否 | 本章主题推进、反证、暂停或回收 |
+| subplot_operations | SubplotOperation[] | 否 | 本章子情节新增、推进、休眠、并回或回收 |
+| pov_plan | POVPlan | 否 | 多 POV 或特殊 POV 章节计划 |
+| dialogue_plan | DialoguePlan | 否 | 对话主导章节的语音差异、潜台词和密度控制 |
+| character_exit_plan | CharacterExitPlan | 否 | 死亡、离队、长期缺席、背叛、洗白、阵营转向或功能交接 |
+| breathing_chapter_plan | BreathingChapterPlan | 否 | 呼吸章的低外部强度、高内部推进设计 |
 
 ## Classification 结构
 
@@ -281,6 +287,77 @@
   "next_3_to_5_chapter_changes": ["本章结果会影响后续3-5章的变化"],
   "state_risks_to_track": ["时间线/地点/人物/伏笔/事实/资源/关系"],
   "next_chapter_must_continue": "下一章必须承接的具体点"
+}
+```
+
+## 可选功能字段
+
+这些字段只在章节涉及对应功能时启用，避免常规章节过度结构化。
+
+### ThemeOperation
+
+```json
+{
+  "function": "推进/反证/误导/暂停/回收",
+  "theme_question": "本章触及的主题问题",
+  "protagonist_answer_change": "主角答案变化；无则写无",
+  "presented_by_choice": "通过哪个选择或代价呈现",
+  "avoid_preaching": "禁止说教项"
+}
+```
+
+### SubplotOperation
+
+```json
+{
+  "subplot_id": "SUBPLOT-001",
+  "operation": "新增/推进/休眠/并回主线/回收",
+  "mainline_service": "如何服务主线",
+  "next_node": "下一节点"
+}
+```
+
+### POVPlan
+
+```json
+{
+  "pov_characters": ["CHAR-PROTAGONIST"],
+  "switch_reason": "切换原因；单 POV 写无",
+  "knowledge_boundaries": "每个 POV 不能知道什么"
+}
+```
+
+### DialoguePlan
+
+```json
+{
+  "dialogue_role": "谈判/审讯/争执/潜台词/关系拉扯",
+  "voice_contrast": "角色语音差异",
+  "subtext": "潜台词设计",
+  "density_control": "对话与动作/描写比例"
+}
+```
+
+### CharacterExitPlan
+
+```json
+{
+  "character_id": "CHAR-XXX",
+  "exit_type": "死亡/离队/长期缺席/背叛/洗白/阵营转向/功能交接",
+  "preplanned_in": "Volume/Arc/Chapter 计划位置",
+  "handoff": "该角色承担的 Fact/LOOP/REL 如何处理",
+  "state_updates": "需要同步的文件"
+}
+```
+
+### BreathingChapterPlan
+
+```json
+{
+  "reason": "高潮后/失败后/关系沉淀/信息整理/新地图进入",
+  "lowered_external_intensity": true,
+  "must_advance": ["关系线", "代价", "事实显露"],
+  "next_pressure": "下一场冲突压力来源"
 }
 ```
 

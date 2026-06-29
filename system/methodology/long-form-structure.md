@@ -65,6 +65,8 @@ Book 终极目标
 
 ## Part 必填字段（ultra_long）
 
+Part 必须落到独立文件：`novels/{novel_id}/structure/parts/part-{N}.md`。不得只写在 long-term-arc 的概览里。
+
 - Part 名称与章节范围
 - Part 级主线目标
 - 地图/阶层/势力/规则跃迁
@@ -73,6 +75,8 @@ Book 终极目标
 - 主要人物在本 Part 的命运节点
 - Part 级伏笔埋设与回收计划
 - Part 终局事件和下一 Part 钩子
+
+Part 完成时必须设置 `pending_action: part_transition`，按 `system/templates/part-transition.md` 补齐下一 Part，不得在同一次章节运行中继续生成下一章。
 
 ## Arc 必填字段
 

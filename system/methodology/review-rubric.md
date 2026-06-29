@@ -4,18 +4,23 @@
 
 ## 单章评分维度
 
+评分维度、权重、综合分公式和通过阈值的唯一权威来源是 `system/schemas/scoring.schema.md`。本文件只同步展示当前版本；若两处不一致，以 `scoring.schema.md` 为准，并必须修正本文件。
+
 | 维度 | 权重 | 说明 |
 |------|------|------|
-| conflict_strength | 20% | 冲突是否明确、有压迫、有升级 |
-| pacing_speed | 15% | 是否紧凑，是否存在无推进段落 |
-| satisfaction_level | 15% | 是否产生情绪回报 |
-| hook_strength | 10% | 章末是否驱动下一章 |
-| genre_promise | 10% | 是否兑现类型承诺，并服务既定分类 |
+| conflict_strength | 15% | 冲突是否明确、有压迫、有升级 |
+| pacing_speed | 12% | 是否紧凑，是否存在无推进段落 |
+| satisfaction_level | 12% | 是否产生情绪回报 |
+| hook_strength | 8% | 章末是否驱动下一章 |
+| genre_promise | 8% | 是否兑现类型承诺，并服务既定分类 |
 | logic_consistency | 10% | 因果、时间线、战力、事实库和角色知情状态是否自洽 |
 | world_fidelity | 5% | 是否遵守世界规则、能力/制度事实和禁止改写项 |
-| character_consistency | 5% | 角色画像、行为、命运推进和关系线操作是否符合设定 |
+| character_consistency | 6% | 角色画像、行为、命运推进和关系线操作是否符合设定 |
 | setup_payoff | 5% | 伏笔是否有推进或合理埋设，长期伏笔是否绑定 Fact ID 或明确未来答案 |
-| novelty | 5% | 是否避免重复爽点和桥段 |
+| causal_chain | 7% | 场景与关键剧情因果闭环质量 |
+| continuity_control | 6% | 时间线、地点、人物位置和章节承接稳定性 |
+| power_resource_consistency | 4% | 战力、能力、资源、道具、伤势和地位守恒 |
+| novelty | 2% | 是否避免重复爽点和桥段 |
 
 ## 叙事表现门禁
 

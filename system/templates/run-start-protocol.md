@@ -16,7 +16,10 @@
 - 本次路由对应模板：
   - `system/templates/chapter-cycle.md`
   - `system/templates/arc-transition.md`
+  - `system/templates/part-transition.md`
   - `system/templates/stage-review.md`
+  - `system/templates/state-archive.md`
+  - `system/templates/active-context-refresh.md`
 
 ## 启动步骤
 
@@ -59,13 +62,15 @@
 
 | pending_action | 本次运行处理方式 |
 |----------------|------------------|
-| content_fill | 补齐缺失的 premise/world/characters/canon/volume/arc/state/open_loops，不生成章节 |
+| content_fill | 补齐缺失的 premise（含平台上架信息）/world/characters/canon/volume/arc/state/open_loops，不生成章节 |
 | repair | 处理 `repair_log` 中未解决问题，不生成新章 |
 | plan_adjust | 调整下一章 chapter_plan 或后续 3-5 章节奏，不写正文 |
 | stage_review_5ch | 按 `stage-review.md` 执行最近 3-5 章审稿 |
 | stage_review_20ch | 按 `stage-review.md` 执行最近 10-20 章审稿 |
 | arc_transition | 按 `arc-transition.md` 补齐下一 Arc |
 | volume_transition | 按 `arc-transition.md` 补齐下一 Volume |
+| part_transition | 按 `part-transition.md` 补齐下一 Part（仅 ultra_long） |
+| state_archive | 按 `state-archive.md` 归档膨胀的 state，不生成新章 |
 | completed | 不再生成章节，只确认完结状态 |
 
 处理完成后必须更新 `pending_action`、`pending_action_reason`、`last_run_status`、`last_run_completed_state`、`recovery_note`，并清除 `run_lock`。
@@ -99,6 +104,10 @@
 - 当前无未处理阻塞级 repair
 - 上一章 review 通过（第一章除外）
 - premise/world/characters/canon/volume/arc/state/open_loops 已补齐
+- cast-active/facts-active 已覆盖当前 Arc；若缺失或过期，先按 `active-context-refresh.md` 刷新
+- 如 length_tier = ultra_long，当前 part 文件已补齐
+- current-state 未超过归档阈值；若超过，必须先处理 `pending_action: state_archive`
+- premise 已补齐平台上架信息：上架书名、500字以内作品简介、3-6个平台标签、点击信号和标签合规检查
 
 ## 结束要求
 

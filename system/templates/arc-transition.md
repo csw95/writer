@@ -1,6 +1,6 @@
 # Arc / Volume Transition Protocol
 
-Arc 或 Volume 完成后的跨会话过渡协议。此流程由 `pending_action: arc_transition` 或 `pending_action: volume_transition` 触发，本次运行只处理结构过渡，不生成正文。
+Arc 或 Volume 完成后的跨会话过渡协议。此流程由 `pending_action: arc_transition` 或 `pending_action: volume_transition` 触发，本次运行只处理结构过渡，不生成正文。Part 过渡必须使用 `system/templates/part-transition.md`，不得混入本协议。
 
 ## 触发条件
 

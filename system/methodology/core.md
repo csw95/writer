@@ -54,5 +54,7 @@
 - 前三章目标已规划，或至少第一章 chapter_plan 已通过审阅
 - `state/current-state.md` 已包含运行控制字段，且 `pending_action` 已正确路由
 - `run_lock` 可用，且上次运行不是未恢复的 partial 状态
+- `state/current-state.md` 未超过归档阈值；若超过，先处理 `pending_action: state_archive`
+- `ultra_long` 当前 Part 文件已补齐；Part 边界只设置 `pending_action: part_transition`
 
 缺少以上任一项，只允许进行内容补齐、恢复或待办动作处理，不允许生成章节。

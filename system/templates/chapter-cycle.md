@@ -28,12 +28,16 @@
 
 - 明确 `novel_id`
 - `novels/{novel_id}/bible/premise.md` 已完成
+- `premise` 已完成平台上架信息：上架书名、500字以内作品简介、3-6个平台标签、点击信号和标签合规检查
 - `premise` 已声明 channel / category / subcategory / tags
 - `premise` 已声明 length_tier / target_chapters / target_chapter_chars / target_total_chars
 - `novels/{novel_id}/world/worldbuilding.md` 已完成，且包含世界规则、资源、代价、禁止事项和开篇显露策略
 - `novels/{novel_id}/characters/cast.md` 已完成，且当前 Volume / Arc 关键人物具备最小画像和阶段命运方向
+- `novels/{novel_id}/characters/cast-active.md` 已完成，且覆盖当前 Arc 和后续 3-5 章关键人物
 - `novels/{novel_id}/canon/facts.md` 已完成，且当前 Volume / Arc 涉及的历史真相、暗线事实、身份秘密、能力代价、物品真相和揭露窗口已登记
+- `novels/{novel_id}/canon/facts-active.md` 已完成，且覆盖当前 Arc 和后续 3-5 章涉及 Fact
 - `novels/{novel_id}/structure/long-term-arc.md` 已完成
+- 如 length_tier = ultra_long，当前 Part 文件已完成，且已填写 Part 目标、关键 Volume、人物命运、关系线编排、事实显露计划和伏笔计划
 - 当前 Volume 文件已完成，且已填写本卷人物配置与命运、关系线编排和事实显露计划
 - 当前 Arc 文件已完成，且已通过 Arc 人物门禁、关系线编排和事实显露节拍
 - 当前 Arc 的章节级关系线节拍已明确
@@ -44,12 +48,13 @@
 - 当前 `pending_action` 为 none
 - `last_run_status` 不是 partial，且 `last_run_completed_state` 可恢复到本次合法起点
 - 当前 state 文件的最近章节摘要、时间线、地点、人物位置、战力资源、敌对势力行动、质量风险和错误修复台账已更新到最新章节
+- 当前 state 文件未超过归档阈值；若超过，先执行 `pending_action: state_archive`
 - 当前 canon/facts 文件已更新到最新章节
 - 当前 open_loops 文件已更新到最新章节
 - 当前无阻塞级错误修复提案；如有，必须先完成内容补齐或重新规划
 - 上一章 review 通过（第一章除外）
 
-缺少任一项，停止章节生成，将 `pending_action` 设置为 content_fill、repair、plan_adjust、stage_review_5ch、stage_review_20ch、arc_transition 或 volume_transition，并写明 `pending_action_reason`。
+缺少任一项，停止章节生成，将 `pending_action` 设置为 content_fill、repair、plan_adjust、stage_review_5ch、stage_review_20ch、arc_transition、volume_transition、part_transition 或 state_archive，并写明 `pending_action_reason`。
 
 ## 必读方法论
 
@@ -64,6 +69,21 @@
 - `system/methodology/genre-promises.md`
 - 第一章额外读取 `system/methodology/opening.md`
 - 审阅阶段读取 `system/methodology/review-rubric.md`
+- 审阅评分权重以 `system/schemas/scoring.schema.md` 为唯一权威来源
+- 伏笔台账遵守 `system/schemas/open-loops.schema.md`
+
+## 按需方法论
+
+以下文件只在本章涉及对应功能时读取，避免常规章节过度结构化：
+
+- `system/methodology/theme.md`：本章承担主题推进、反证、回收或主题漂移修复时读取。
+- `system/methodology/subplots.md`：本章新增、推进、休眠、并回或回收子情节时读取。
+- `system/methodology/dialogue.md`：本章以对话冲突、谈判、审讯、关系拉扯或潜台词为主要场景时读取。
+- `system/methodology/character-exit.md`：本章涉及死亡、离队、长期缺席、背叛、洗白、阵营转向或功能交接时读取。
+- `system/methodology/context-compression.md`：执行 state_archive、active-context-refresh、阶段压缩摘要或 100+ 章后接力时读取。
+- `system/methodology/review-trends.md`：执行 stage_review_5ch / stage_review_20ch 或连续评分下滑时读取。
+- `system/methodology/multi-pov.md`：本章启用多 POV 或反派 POV 时读取。
+- `system/methodology/breathing-chapters.md`：本章定位为呼吸章时读取。
 
 ## STATE 2: 章节规划
 
@@ -72,13 +92,16 @@
 - `novels/{novel_id}/bible/premise.md`
 - `novels/{novel_id}/world/worldbuilding.md`
 - `novels/{novel_id}/characters/cast.md`
+- `novels/{novel_id}/characters/cast-active.md`（优先读取）
 - `novels/{novel_id}/canon/facts.md`
+- `novels/{novel_id}/canon/facts-active.md`（优先读取）
 - `novels/{novel_id}/state/current-state.md`
 - `novels/{novel_id}/open-loops/loops.md`
 - `novels/{novel_id}/structure/long-term-arc.md`
 - premise 中的频道、主分类、细分类和标签
 - premise 中的篇幅档位和章节字数范围
 - 当前 Volume 文件 `novels/{novel_id}/structure/volumes/volume-{N}.md`
+- 当前 Part 文件 `novels/{novel_id}/structure/parts/part-{N}.md`（ultra_long 必填）
 - 当前 Arc 文件 `novels/{novel_id}/structure/arcs/arc-{N}.md`
 - 当前 Volume / Arc 的关系线编排
 - 当前 Volume / Arc 的事实显露计划
@@ -136,7 +159,9 @@
 - 当前 state
 - premise 中的篇幅档位和章节字数范围
 - premise、world、characters（只读）
+- cast-active（只读，优先于完整 characters）
 - canon/facts（只读）
+- facts-active（只读，优先于完整 canon/facts）
 - 当前 Volume / Arc（只读）
 - 当前 Volume / Arc 的关系线编排（只读）
 - 当前 Volume / Arc 的事实显露计划（只读）
@@ -185,7 +210,9 @@
 - 本章 chapter_plan 中每个关键场景的呈现焦点、感官锚点、动作节拍、句式节奏和禁止概括项
 - 本章正文
 - premise、world、characters
+- cast-active
 - 当前 canon/facts
+- facts-active
 - 当前 state
 - 当前 open_loops
 - 当前 Volume / Arc
@@ -254,7 +281,9 @@
 
 - chapter_plan、正文、review 报告
 - 当前 characters/cast.md
+- 当前 characters/cast-active.md
 - 当前 canon/facts.md
+- 当前 canon/facts-active.md
 - 当前 state 文件
 - 当前 open_loops 文件
 - 当前 Volume / Arc
@@ -270,7 +299,9 @@
 
 - 更新 `novels/{novel_id}/state/current-state.md`
 - 更新 `novels/{novel_id}/characters/cast.md` 中已登场人物的状态、关系变化、命运推进和已揭示秘密
+- 更新 `novels/{novel_id}/characters/cast-active.md` 中当前 Arc 活跃人物、即将入场人物和休眠人物
 - 更新 `novels/{novel_id}/canon/facts.md` 中本章涉及事实的当前显露状态、读者已知、角色知情变化、关联章节计划和修订记录（不得临场改写真实事实）
+- 更新 `novels/{novel_id}/canon/facts-active.md` 中当前 Arc 活跃事实、即将触发事实和暂不触碰事实
 - 更新 state / cast 中已推进的关系线状态、触发事件、信任度或关系强度变化、下一计划节点
 - 更新 `novels/{novel_id}/open-loops/loops.md`
 - 更新章节摘要、场景因果链、时间线、地点、人物位置、战力资源、敌对势力行动、质量风险和错误修复台账
@@ -303,8 +334,10 @@
 先确认本次章节循环已完成到 STATE_6，并将 `last_run_completed_state` 写为 STATE_6。随后执行单章推进判定，并把 `lifecycle_state` 设置为下一次运行入口：
 
 - 如果全书完成 → 设置 `pending_action: completed`，`lifecycle_state = STATE_6`
+- 如果当前 Part 完成 → 设置 `pending_action: part_transition`，下次运行按 `system/templates/part-transition.md` 处理 Part 过渡（仅 ultra_long）
 - 如果当前 Volume 完成 → 设置 `pending_action: volume_transition`，下次运行按 `system/templates/arc-transition.md` 处理 Volume 过渡
 - 如果当前 Arc 完成 → 设置 `pending_action: arc_transition`，下次运行按 `system/templates/arc-transition.md` 处理 Arc 过渡
+- 如果 state 超过归档阈值 → 设置 `pending_action: state_archive`，下次运行按 `system/templates/state-archive.md` 处理归档
 - 如果最近 10-20 章剧情单元未闭环 → 设置 `pending_action: stage_review_20ch`
 - 如果最近 3-5 章无明显局势变化或爽点重复明显 → 设置 `pending_action: stage_review_5ch` 或 `plan_adjust`
 - 如果存在未处理阻塞级修复 → 设置 `pending_action: repair`

@@ -14,7 +14,7 @@
 | run_control.last_completed_chapter | integer | ✅ | 已完成 STATE_6 并完成状态更新的最新章节编号 |
 | run_control.last_run_status | enum | ✅ | not_started/success/partial/blocked/skipped |
 | run_control.last_run_completed_state | enum | ✅ | STATE_0 ~ STATE_6；用于断点恢复 |
-| run_control.pending_action | enum | ✅ | none/content_fill/repair/plan_adjust/stage_review_5ch/stage_review_20ch/arc_transition/volume_transition/completed |
+| run_control.pending_action | enum | ✅ | none/content_fill/repair/plan_adjust/stage_review_5ch/stage_review_20ch/arc_transition/volume_transition/part_transition/state_archive/completed |
 | run_control.pending_action_reason | string | ✅ | 下一次运行必须优先处理的原因；无则写“无” |
 | run_control.run_lock.status | enum | ✅ | clear/locked |
 | run_control.run_lock.locked_at | timestamp/null | ✅ | 加锁时间；clear 时写 N/A |
@@ -24,9 +24,14 @@
 | classification.category | string | ✅ | 主大类 |
 | classification.subcategory | string | ✅ | 细分类 |
 | classification.tags | string[] | ✅ | 2-6个卖点标签 |
-| recent_chapter_summaries | ChapterSummary[] | ✅ | 最近章节摘要、局势变化和承接点 |
+| state_archive | StateArchiveState | ✅ | State 归档索引、活跃窗口和最近归档章节 |
+| active_context | ActiveContextState | ✅ | cast-active / facts-active 的范围、更新时间和覆盖状态 |
+| recent_chapter_summaries | ChapterSummary[] | ✅ | 最近章节摘要、局势变化和承接点；默认只保留最近 20 章，旧内容进入 state/archive |
 | timeline | TimelineState | ✅ | 当前故事时间、时间跨度、地点变化和连续性风险 |
 | character_positions | CharacterPosition[] | ✅ | 关键人物位置、行动和可达性 |
+| part.name | string | ultra_long ✅ | 当前 Part 名称；非 ultra_long 可写“无” |
+| part.current | integer | ultra_long ✅ | Part 内当前章节；非 ultra_long 可写 0 |
+| part.total | integer | ultra_long ✅ | Part 总章节数；非 ultra_long 可写 0 |
 | volume.name | string | ✅ | 当前 Volume 名称 |
 | volume.current | integer | ✅ | Volume 内当前章节 |
 | volume.total | integer | ✅ | Volume 总章节数 |
@@ -54,8 +59,10 @@
 | supporting_characters | SupportingChar[] | ✅ | 关键配角状态、画像状态和命运推进 |
 | canon_facts | CanonFactState[] | ✅ | 关键事实显露状态、读者已知和角色知情变化 |
 | unresolved_conflicts | Conflict[] | ✅ | 未解决冲突列表 |
-| scene_causal_chains | SceneCausalChain[] | ✅ | 关键场景前因、选择、结果和后续影响 |
+| scene_causal_chains | SceneCausalChain[] | ✅ | 关键场景前因、选择、结果和后续影响；默认只保留最近 10 章，旧内容进入 state/archive |
 | quality_risks | QualityRiskState | ✅ | 节奏、爽点、伏笔、事实、时间线和资源风险 |
+| review_trends | ReviewTrendState | ✅ | 最近 5/20 章评分趋势和重复低分维度 |
+| subplots | SubplotState[] | 否 | 活跃、休眠、并回或已解决子情节 |
 | repair_log | RepairItem[] | ✅ | 错误修复台账 |
 | next_chapter_goal | string | ✅ | 下一章目标 |
 | next_chapter_hook | string | ✅ | 承接的上一章钩子 |
@@ -115,6 +122,8 @@
 | stage_review_20ch | 执行最近 10-20 章剧情单元审稿 |
 | arc_transition | 补齐下一 Arc 的人物门禁、关系线编排、事实显露节拍和章节概要 |
 | volume_transition | 补齐下一 Volume 的人物配置、命运线、关系线编排、事实显露计划和压力阶梯 |
+| part_transition | 补齐下一 Part 的地图/阶层/规则跃迁、人物命运、关系线、事实显露和关键 Volume 列表 |
+| state_archive | 暂停章节生成，按 `state-archive.md` 归档膨胀的 state |
 | completed | 全书已完成，不再生成新章 |
 
 运行开始时必须先读取 `run_control`。若 `run_lock.status = locked` 且锁未超过人工设定的超时窗口，不得继续生成章节。若存在 `pending_action != none`，必须先执行对应动作，不得直接进入 STATE 2。
@@ -131,6 +140,68 @@
   "next_continuation": "下一章承接点"
 }
 ```
+
+## StateArchiveState 结构
+
+```json
+{
+  "summary_active_window_chapters": 20,
+  "causal_chain_active_window_chapters": 10,
+  "last_archived_chapter": 0,
+  "archive_index": "novels/{novel_id}/state/archive/index.md",
+  "resolved_repairs_archive": "novels/{novel_id}/state/archive/resolved-repairs.md",
+  "archive_files": [],
+  "current_state_size_limit": "80KB",
+  "archive_trigger": "recent_chapter_summaries>20 或 scene_causal_chains>10 或 resolved repair 过多 或 current-state.md>80KB 或 Arc完成"
+}
+```
+
+## ActiveContextState 结构
+
+```json
+{
+  "cast_active": "novels/{novel_id}/characters/cast-active.md",
+  "facts_active": "novels/{novel_id}/canon/facts-active.md",
+  "scope": "Part 001 / Volume 001 / Arc 001",
+  "covers_next_chapters": "Ch2-Ch6",
+  "last_refreshed_chapter": 1,
+  "refresh_needed": false,
+  "reason": "无"
+}
+```
+
+## ReviewTrendState 结构
+
+```json
+{
+  "recent_5_avg": "N/A",
+  "recent_20_avg": "N/A",
+  "repeated_low_dimensions": [],
+  "trend_action": "none/stage_review_5ch/stage_review_20ch/plan_adjust"
+}
+```
+
+## SubplotState 结构
+
+```json
+{
+  "subplot_id": "SUBPLOT-001",
+  "title": "子情节名称",
+  "state": "planned/active/dormant/converging/resolved/abandoned_with_reason",
+  "mainline_service": "服务主线方式",
+  "next_node": "下一计划节点",
+  "related_facts_loops": ["FACT-001", "LOOP-001"]
+}
+```
+
+归档规则：
+
+1. `current-state.md` 只保留最近 20 章章节摘要和最近 10 章场景因果链。
+2. 更早的章节摘要、因果链、时间地点变化、人物关系变化、战力资源变化、Fact 显露和 LOOP 变化必须写入 `state/archive/`。
+3. `state_archive.last_archived_chapter` 必须小于等于 `last_completed_chapter`。
+4. 活跃 Fact / LOOP / REL 的当前状态仍必须保留在 `current-state.md` 中，不能只存在归档。
+5. 归档操作不得改变 `last_completed_chapter` 或 `next_chapter_to_generate`。
+6. `repair_log` 只保留待处理、处理中、阻塞、高风险和最近 20 章内解决的修复项；更早的已解决项进入 `state/archive/resolved-repairs.md`。
 
 ## TimelineState 结构
 
@@ -321,16 +392,21 @@
 11. relationship_lines 必须与 characters/cast.md 和当前 Volume / Arc 的关系线编排一致；未规划关系线不得出现重大推进。
 12. canon_facts 必须与 canon/facts.md 和当前 Volume / Arc 的事实显露计划一致；未登记事实不得进入 state。
 13. canon_facts 只能记录显露状态和知情变化，不得改写真实事实、公开版本或禁止改写项。
-14. recent_chapter_summaries 必须包含最新章节目标、核心事件、局势变化、章末钩子和下一章承接点。
+14. recent_chapter_summaries 必须包含最新章节目标、核心事件、局势变化、章末钩子和下一章承接点，且默认只保留最近 20 章；超过窗口必须归档。
 15. timeline 与 character_positions 必须保证时间、地点、移动、通信、疗伤和冷却连续。
 16. power_resources 中的变化必须有来源、代价、限制和下次变化条件。
 17. antagonist_forces 必须记录当前目标、主动行动、资源/底牌、误判点和下一步压力。
-18. scene_causal_chains 必须记录最新章节关键场景的前因、行动选择、结果变化和后续影响。
+18. scene_causal_chains 必须记录最新章节关键场景的前因、行动选择、结果变化和后续影响，且默认只保留最近 10 章；超过窗口必须归档。
 19. quality_risks 必须追踪最近 3-5 章局势变化、最近 10-20 章剧情单元状态和主要连载风险。
-20. repair_log 不得存在未处理的阻塞级问题进入下一章循环。
+19a. active_context 必须说明 cast-active / facts-active 覆盖范围；缺失或过期时必须刷新。
+19b. review_trends 必须在阶段审稿或连续评分下滑时更新。
+19c. active 子情节必须有下一节点；resolved 子情节不得继续占用活跃推进窗口。
+20. repair_log 不得存在未处理的阻塞级问题进入下一章循环；已解决且超出活跃窗口的修复项必须归档到 `state/archive/resolved-repairs.md`。
 21. next_chapter_to_generate 必须等于 last_completed_chapter + 1，除非 pending_action 为 completed。
 22. last_completed_chapter 必须小于等于 current_chapter；如果存在章节文件但 state 未推进，必须进入恢复检测。
 23. last_run_status 为 partial 时，下一次运行必须优先执行断点恢复；last_run_completed_state 不是 STATE_6 时，只有 STATE_0/STATE_1 初始化状态或明确 pending_action 路由可继续。
-24. pending_action 不为 none 时，不得生成新章节；必须先执行对应补齐、修复、审稿或过渡流程。
+24. pending_action 不为 none 时，不得生成新章节；必须先执行对应补齐、修复、审稿、归档或过渡流程。
 25. run_lock.status 为 locked 时，不得启动新的章节循环；只有确认旧运行已结束、超时或人工解除后才能继续。
 26. 每次 STATE 6 完成后必须写入单章运行日志，并同步 last_run_status、last_run_completed_state、pending_action 和 recovery_note。
+27. length.tier = ultra_long 时，part.name、part.current、part.total 必须有效，并与 long-term-arc 和 `structure/parts/part-{N}.md` 一致。
+28. current-state.md 超过归档阈值或活跃窗口超过 10 章时，下一次运行必须先设置或处理 `pending_action: state_archive`。

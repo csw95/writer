@@ -4,7 +4,7 @@
 
 ## 角色边界
 
-- ✅ 可以：更新 state、characters/cast.md、canon/facts.md 的显露状态、open_loops、power progression、Volume/Arc 进度、运行控制字段、run 日志
+- ✅ 可以：更新 state、state/archive、characters/cast.md、characters/cast-active.md、canon/facts.md、canon/facts-active.md 的显露状态、open_loops、power progression、Part/Volume/Arc 进度、运行控制字段、run 日志
 - ❌ 禁止：修改正文或 chapter_plan，引入未在规划中批准的新人物或新设定，跨小说操作
 - ❌ 禁止：删除伏笔（只能标记为已回收或废弃）
 - ❌ 禁止：临场改写 canon/facts.md 中的真实事实、公开版本、禁止改写项或既定揭露窗口
@@ -14,6 +14,14 @@
 - `system/methodology/characters.md`
 - `system/methodology/relationship-lines.md`
 - `system/methodology/canon.md`
+- `system/schemas/open-loops.schema.md`
+
+## 按需方法论
+
+- active 文件刷新或归档压缩：读取 `system/methodology/context-compression.md`
+- 子情节状态更新：读取 `system/methodology/subplots.md`
+- 角色退场、休眠或功能交接：读取 `system/methodology/character-exit.md`
+- 阶段审稿趋势写入：读取 `system/methodology/review-trends.md`
 
 ## 输入
 
@@ -27,7 +35,9 @@
 - 当前小说的篇幅规划（来自 premise/state）
 - 当前的 `state` 文件
 - 当前的 `characters/cast.md`
+- 当前的 `characters/cast-active.md`
 - 当前的 `canon/facts.md`
+- 当前的 `canon/facts-active.md`
 - 当前的 `open_loops` 文件
 - 当前 Volume / Arc 文件
 - 当前 Volume / Arc 的关系线编排
@@ -35,6 +45,7 @@
 - 当前 state 中的时间线、地点、人物位置、战力资源、敌对势力行动、最近章节摘要、质量风险和错误修复台账
 - 当前 state 中的运行控制字段
 - 本章单章 run 日志路径（`novels/{novel_id}/runs/ch-{N}-{date}.md`）
+- 当前 state archive 索引（如已存在）
 
 ## 输出
 
@@ -52,7 +63,7 @@
 - **last_completed_chapter（已完成章节）**: {N}
 - **last_run_status（上次运行状态）**: success
 - **last_run_completed_state（上次完成状态）**: STATE_6
-- **pending_action（待处理动作）**: {none/repair/plan_adjust/stage_review_5ch/stage_review_20ch/arc_transition/volume_transition/completed}
+- **pending_action（待处理动作）**: {none/repair/plan_adjust/stage_review_5ch/stage_review_20ch/arc_transition/volume_transition/part_transition/state_archive/completed}
 - **pending_action_reason（待处理原因）**: {无或具体原因}
 - **run_lock.status（运行锁）**: clear
 - **run_lock.locked_at（锁定时间）**: N/A
@@ -60,9 +71,11 @@
 - **recovery_note（恢复说明）**: {无或断点恢复说明}
 
 ## 当前剧情阶段
+- **当前 Part**: {Part名称/编号；非 ultra_long 写“无”}
 - **当前 Volume**: {Volume名称/编号}
 - **当前 Arc**: {Arc名称/编号}
 - **当前章节**: {N}
+- **Part 进度**: {N}/{Part总章数；非 ultra_long 写 0/0}
 - **Arc 进度**: {N}/{Arc总章数}
 - **Volume 进度**: {N}/{Volume总章数}
 - **总体进度**: {N}/{总章数}
@@ -80,9 +93,29 @@
 - **标签**: {tags}
 
 ## 最近章节摘要
+> 只保留最近 20 章；更早内容写入 `state/archive/`。
+
 | 章节 | 本章目标 | 核心事件 | 局势变化 | 章末钩子 | 下一章承接 |
 |------|----------|----------|----------|----------|------------|
 | Ch{N} | {目标} | {事件} | {变化} | {钩子} | {承接点} |
+
+## State 归档索引
+- **摘要活跃窗口章节数**: 20
+- **因果链活跃窗口章节数**: 10
+- **最近归档章节**: {last_archived_chapter}
+- **归档索引文件**: `novels/{novel_id}/state/archive/index.md`
+- **已解决修复归档**: `novels/{novel_id}/state/archive/resolved-repairs.md`
+- **归档分片**: {archive_files}
+- **归档触发状态**: {无/需要归档/本次已归档}
+
+## Active Context 状态
+- **cast-active**: `novels/{novel_id}/characters/cast-active.md`
+- **facts-active**: `novels/{novel_id}/canon/facts-active.md`
+- **覆盖范围**: {Part / Volume / Arc}
+- **覆盖后续章节**: {ChA-ChB}
+- **最近刷新章节**: {N}
+- **是否需要刷新**: {是/否}
+- **原因**: {无或具体原因}
 
 ## 时间线与地点
 - **当前故事时间**: {本章结束时故事时间}
@@ -139,6 +172,8 @@
 1. {冲突描述} — 优先级 [{高/中/低}] — 预计解决章节: {N}
 
 ## 场景因果链记录
+> 只保留最近 10 章；更早内容写入 `state/archive/`。
+
 | 章节 | 场景 | 前因 | 行动选择 | 结果变化 | 后续影响 |
 |------|------|------|----------|----------|----------|
 
@@ -153,6 +188,16 @@
 - **时间线/地点风险**: [无/低/中/高]
 - **战力资源风险**: [无/低/中/高]
 - **人物行为漂移风险**: [无/低/中/高]
+
+## 审阅趋势
+- **最近 5 章均分**: {N/A 或数值}
+- **最近 20 章均分**: {N/A 或数值}
+- **重复低分维度**: {无或维度列表}
+- **趋势动作**: {none/stage_review_5ch/stage_review_20ch/plan_adjust}
+
+## 子情节状态
+| 子情节ID | 名称 | 状态 | 服务主线方式 | 下一节点 | 关联 Fact/Loop |
+|----------|------|------|--------------|----------|----------------|
 
 ## 错误修复台账
 | 问题ID | 发现章节 | 类型 | 严重程度 | 描述 | 修复方案 | 状态 |
@@ -187,6 +232,8 @@
 - **待补画像**: {如果审阅允许但信息不足，标记为下一次正文前必须补齐}
 ```
 
+同时更新 `characters/cast-active.md`：新增/移出当前 Arc 活跃人物、即将入场人物和休眠人物，确保下一章优先读取轻量上下文即可判断人物位置、目标、状态、关系线和禁止越界项。
+
 ### 3. 更新后的 canon/facts.md（如有变化）
 
 仅更新本章 chapter_plan.canon_fact_plan 或 review 允许的显露状态，不得改写核心事实。
@@ -206,6 +253,8 @@
 - **关联章节计划**: {ch-N}
 - **修订记录**: {仅在内容补齐批准后记录；常规章节更新写“无核心事实修订”}
 ```
+
+同时更新 `canon/facts-active.md`：同步本章显露变化、下一章和后续 3-5 章涉及 Fact、暂不触碰事实和显露上限，确保下一章优先读取轻量上下文即可判断 Fact 边界。
 
 ### 4. 更新后的 open_loops 文件
 
@@ -318,6 +367,16 @@
 - **recovery_note**:
 ```
 
+### 6. State 归档文件（按需）
+
+当最近章节摘要超过 20 章、场景因果链超过 10 章、已解决 repair 超出活跃窗口，或 `current-state.md` 超过 80KB，必须按 `system/templates/state-archive.md` 写入或更新：
+
+- `novels/{novel_id}/state/archive/index.md`
+- `novels/{novel_id}/state/archive/chapters-{A}-{B}.md`
+- `novels/{novel_id}/state/archive/resolved-repairs.md`
+
+若本次章节状态更新已过重、无法安全完成归档，必须设置 `pending_action: state_archive`，并写清 `pending_action_reason`。
+
 ## 更新原则
 
 1. **增量更新**: 只修改变化的部分，保持已有内容完整。
@@ -332,16 +391,20 @@
 10. **关系线不丢**: 已推进或被维持的长期关系线必须同步到 state / cast，记录关系线ID、状态变化、触发事件和下一计划节点。
 11. **事实不改写**: 已登记事实只能更新显露状态、读者已知、角色知情变化、关联伏笔和关联章节；不得临场修改真实事实、公开版本、禁止改写项或揭露窗口。
 12. **事实与伏笔互锁**: 长期伏笔新增、推进或回收时，必须同步对应 Fact ID 或明确未来答案。
-13. **章节摘要不丢**: 每章必须追加目标、核心事件、局势变化、章末钩子和下一章承接点。
-14. **因果链不丢**: 每个关键场景的前因、行动选择、结果变化和后续影响必须进入 state。
+13. **章节摘要不丢**: 每章必须追加目标、核心事件、局势变化、章末钩子和下一章承接点；current-state 只保留最近 20 章，更早内容归档。
+14. **因果链不丢**: 每个关键场景的前因、行动选择、结果变化和后续影响必须进入 state；current-state 只保留最近 10 章，更早内容归档。
 15. **时间地点不丢**: 当前故事时间、地点、人物位置、移动/通信成本和连续性风险必须更新。
 16. **资源战力不丢**: 战力、能力、资源、道具、伤势、声望和地位变化必须有来源、代价和下次变化条件。
 17. **敌人主动性不丢**: 敌对势力当前目标、行动、资源、误判和下一步压力必须更新。
-18. **错误修复不丢**: review 中提出的矛盾必须分类进入错误修复台账；阻塞级问题不得留到下一章。
-19. **运行控制不丢**: 每次 STATE 5/6 后必须同步 `last_completed_chapter`、`next_chapter_to_generate`、`last_run_status`、`last_run_completed_state`、`pending_action`、`run_lock` 和 `recovery_note`。
-20. **过渡不内联**: Arc/Volume 完成时只设置 `pending_action`，不得在本次章节运行中直接展开下一 Arc/Volume 的规划。
-21. **锁必须释放**: 成功、暂停或阻塞结束时都必须将 `run_lock` 置为 clear，并在日志中说明状态。
-22. **日志必须可恢复**: 单章 run 日志必须写明完成到哪个 STATE、是否小修/重写、下一次运行应做什么。
+18. **错误修复不丢**: review 中提出的矛盾必须分类进入错误修复台账；阻塞级问题不得留到下一章；已解决且超出活跃窗口的 repair 进入 `state/archive/resolved-repairs.md`。
+19. **归档索引不丢**: 超过活跃窗口的历史状态必须写入 `state/archive/`，并在 current-state 中保留归档索引入口。
+19a. **活跃上下文不丢**: cast-active / facts-active 必须覆盖当前 Arc 和后续 3-5 章；缺失时设置刷新或内容补齐。
+19b. **子情节不丢**: active / dormant / converging 子情节必须有下一节点；resolved 子情节写入阶段摘要或归档。
+19c. **审阅趋势不丢**: 连续评分下滑、重复低分维度或阶段审稿结果必须写入审阅趋势。
+20. **运行控制不丢**: 每次 STATE 5/6 后必须同步 `last_completed_chapter`、`next_chapter_to_generate`、`last_run_status`、`last_run_completed_state`、`pending_action`、`run_lock` 和 `recovery_note`。
+21. **过渡不内联**: Arc/Volume/Part 完成时只设置对应 `pending_action`，不得在本次章节运行中直接展开下一 Arc/Volume/Part 的规划。
+22. **锁必须释放**: 成功、暂停或阻塞结束时都必须将 `run_lock` 置为 clear，并在日志中说明状态。
+23. **日志必须可恢复**: 单章 run 日志必须写明完成到哪个 STATE、是否小修/重写、下一次运行应做什么。
 
 ## 状态变化追踪规则
 

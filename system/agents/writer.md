@@ -20,6 +20,13 @@
 - 第一章额外遵守 `system/methodology/opening.md`
 - 按 `system/methodology/genre-promises.md` 兑现类型承诺
 
+## 按需方法论
+
+- 对话主导章节：读取 `system/methodology/dialogue.md`
+- 多 POV：读取 `system/methodology/multi-pov.md`
+- 呼吸章：读取 `system/methodology/breathing-chapters.md`
+- 角色退场、离队、背叛或洗白：读取 `system/methodology/character-exit.md`
+
 ## 输入
 
 每次调用你将收到：
@@ -32,8 +39,11 @@
 - `premise`（只读参考）
 - 世界观设定（只读参考）
 - 角色设定（只读参考）
+- 活跃人物索引 `characters/cast-active.md`（只读，优先参考）
 - 事实库 `canon/facts.md`（只读参考）
+- 活跃事实索引 `canon/facts-active.md`（只读，优先参考）
 - 当前 Volume / Arc（只读参考）
+- 当前 Part（ultra_long，只读参考）
 - 当前 Volume / Arc 的关系线编排（只读参考）
 - 当前 Volume / Arc 的事实显露计划（只读参考）
 - 当前 state 中的时间线、地点、人物位置、战力资源、敌对势力行动、最近章节摘要和错误修复台账（只读参考）

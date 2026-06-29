@@ -65,7 +65,8 @@
 - 需调整计划：设置 `pending_action: plan_adjust`，写明下一章计划必须调整的内容。
 - 需补设定：设置 `pending_action: content_fill`，写明缺失文件和缺口。
 - 需修复：设置 `pending_action: repair`，在 repair_log 中登记问题。
-- Arc/Volume 到边界：设置 `pending_action: arc_transition` 或 `volume_transition`。
+- Arc/Volume/Part 到边界：设置 `pending_action: arc_transition`、`volume_transition` 或 `part_transition`。
+- State 超过归档阈值：设置 `pending_action: state_archive`，先完成归档再继续生成章节。
 
 ## 输出位置
 

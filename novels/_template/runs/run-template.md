@@ -2,7 +2,7 @@
 
 ## 本次运行目标
 - **目标章节**: Chapter {N}
-- **运行类型**: [chapter_generation/pending_action/recovery]
+- **运行类型**: [chapter_generation/pending_action/recovery/state_archive/part_transition]
 - **状态**: [进行中/完成/暂停/阻塞/跳过]
 - **开始状态**:
 - **结束状态**:
@@ -17,12 +17,15 @@
 - **pending_action_reason**:
 - **run_lock**:
 - **recovery_note**:
+- **state_archive**: [无/本次归档/待归档]
 
 ## 产物
 - **Chapter Plan**:
 - **Draft**:
 - **Review**:
 - **State**:
+- **State Archive**:
+- **Part/Volume/Arc Transition File**:
 - **Cast**:
 - **Canon**:
 - **Open Loops**:
@@ -79,3 +82,4 @@
 - **pending_action_reason**:
 - **next_chapter_to_generate**:
 - **recovery_note**:
+- **archive_index**:

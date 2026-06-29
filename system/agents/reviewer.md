@@ -12,6 +12,7 @@
 
 - `system/methodology/length-standards.md`
 - `system/methodology/review-rubric.md`
+- `system/schemas/scoring.schema.md`（评分权重与阈值唯一权威来源）
 - `system/methodology/scene-chapter.md`
 - `system/methodology/prose-style.md`
 - `system/methodology/characters.md`
@@ -20,6 +21,16 @@
 - `system/methodology/novel-categories.md`
 - `system/methodology/genre-promises.md`
 - 第一章额外读取 `system/methodology/opening.md`
+
+## 按需方法论
+
+- 主题检查：读取 `system/methodology/theme.md`
+- 子情节检查：读取 `system/methodology/subplots.md`
+- 对话质量检查：读取 `system/methodology/dialogue.md`
+- 角色退场检查：读取 `system/methodology/character-exit.md`
+- 多 POV 检查：读取 `system/methodology/multi-pov.md`
+- 呼吸章检查：读取 `system/methodology/breathing-chapters.md`
+- 阶段趋势检查：读取 `system/methodology/review-trends.md`
 
 ## 输入
 
@@ -35,11 +46,15 @@
 - 当前 `open_loops`
 - 世界观设定
 - 角色设定
+- 活跃人物索引 `characters/cast-active.md`
 - 当前 `canon/facts.md`
+- 活跃事实索引 `canon/facts-active.md`
 - 当前 Volume / Arc
+- 当前 Part（ultra_long，如适用）
 - 当前 Volume / Arc 的关系线编排
 - 当前 Volume / Arc 的事实显露计划
 - 当前 state 中的时间线、地点、人物位置、战力资源、敌对势力行动、最近章节摘要、质量风险和错误修复台账
+- 当前 state 的归档索引与活跃窗口
 
 ## 输出格式
 
@@ -211,6 +226,8 @@
 ```
 
 ## 评分标准
+
+评分维度、权重、综合分公式和通过阈值必须以 `system/schemas/scoring.schema.md` 为准。本文件不得另设权重；若与 schema 不一致，按 schema 执行并记录规范冲突。
 
 ### 核心维度
 
