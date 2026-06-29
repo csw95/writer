@@ -28,7 +28,8 @@
 3. 人物状态、关系状态、知情状态、战力资源和位置变化。
 4. 新增 / 推进 / 回收伏笔及其计划回收窗口。
 5. 事实显露状态、读者已知、角色知情变化和禁止改写项。
-6. 未解决问题、下一章承接点和后续 3-5 章节奏风险。
+6. 章节后 `名词与剧情说明`：解释本章出现的专有名词、规则口径、证据链和容易误读的剧情逻辑，但不得提前剧透未显露事实。
+7. 未解决问题、下一章承接点和后续 3-5 章节奏风险。
 
 所有关键剧情必须遵守：
 
@@ -61,6 +62,7 @@ writer/
 │   │   ├── characters.md
 │   │   ├── relationship-lines.md
 │   │   ├── canon.md
+│   │   ├── chapter-supplement.md
 │   │   ├── novel-categories.md
 │   │   ├── genre-promises.md
 │   │   └── review-rubric.md
@@ -175,6 +177,8 @@ writer/
 `state/current-state.md` 只保留活跃窗口和当前运行所需状态：最近 20 章章节摘要、最近 10 章场景因果链、当前活跃关系/事实/伏笔和未解决修复项。更早的章节摘要、场景因果链、时间地点变化、人物关系变化、战力资源变化、Fact 显露、LOOP 变化和已解决修复项必须按 `system/templates/state-archive.md` 归档到 `state/archive/`，并在 current-state 保留归档索引。
 
 幕后事实、历史关键事件、身份秘密、能力真相、阵营隐情、物品真相和制度底层规则必须按 `system/methodology/canon.md` 提前进入 `canon/facts.md`。凡会影响主角选择、阵营站位、人物动机、证据链、能力代价、伏笔回收、反转或终局因果的事实，必须拥有稳定 `FACT-*`；chapter_plan 引用相关暗线时必须标明 Fact ID。正文可以误导读者或只显露局部，但不得违背事实库，不得让角色知道未显露事实，不得临场改写核心真相。
+
+每章正文文件末尾必须按 `system/methodology/chapter-supplement.md` 追加 `## 名词与剧情说明`。该区块用于审阅和接力，说明本章已显露层级内的专有名词、制度/能力口径、证据链和复杂剧情逻辑；不计入正文字数，不得新增正文未写事件，不得替代正文必要因果，不得越过 `canon/facts.md`、`facts-active.md` 和 chapter_plan 的显露上限。
 
 ### 4. 阶段审稿与错误修复
 

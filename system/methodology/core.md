@@ -31,7 +31,7 @@
 | STATE 0 初始化 | 一句话卖点、分类定位、类型承诺、人物 Want/Need、人物命运纲要、世界规则 | premise、world、characters、state |
 | STATE 1 结构生成 | 三幕式、卷结构、阶段目标、地图/敌人/能力升级、关系线主次编排 | long-term-arc、volume、arc |
 | STATE 2 章节规划 | 场景五要素、冲突升级、期待-兑现、伏笔台账、章节关系线操作 | chapter_plan |
-| STATE 3 正文生成 | 黄金三章、情绪曲线、场景转折、对话行动化 | chapter |
+| STATE 3 正文生成 | 黄金三章、情绪曲线、场景转折、对话行动化、章节后名词与剧情说明 | chapter |
 | STATE 4 审阅 | 类型承诺、节奏、连贯性、伏笔、钩子 | review |
 | STATE 5 状态更新 | 状态连续性、伏笔回收、变量变化 | state、open_loops |
 
