@@ -65,6 +65,7 @@
 - `system/methodology/characters.md`
 - `system/methodology/relationship-lines.md`
 - `system/methodology/canon.md`
+- `system/methodology/chapter-supplement.md`
 - `system/methodology/novel-categories.md`
 - `system/methodology/genre-promises.md`
 - 第一章额外读取 `system/methodology/opening.md`
@@ -179,7 +180,9 @@
 
 - [ ] 正文包含所有 must_have_events
 - [ ] 正文实际字数落在 length_plan 的 min_chars 与 max_chars 之间
-- [ ] 正文字数统计不包含标题、元数据、审阅报告或空行
+- [ ] 正文字数统计不包含标题、元数据、审阅报告、名词与剧情说明或空行
+- [ ] 章节末尾包含 `## 名词与剧情说明`，且该区块不计入正文字数
+- [ ] 名词与剧情说明只解释本章已显露信息，没有新增正文未写事件、未登记事实或超出显露窗口的剧透
 - [ ] 按 scenes 顺序完成主要场景
 - [ ] 每个关键场景都产生局势、人物、关系、伏笔、情绪、设定显露、战力资源或地点状态中的至少一项变化
 - [ ] 每个关键场景都执行了呈现焦点、至少2个感官锚点、动作节拍、句式节奏和禁止概括项
@@ -209,6 +212,7 @@
 - 本章 chapter_plan
 - 本章 chapter_plan 中每个关键场景的呈现焦点、感官锚点、动作节拍、句式节奏和禁止概括项
 - 本章正文
+- 本章 `名词与剧情说明`
 - premise、world、characters
 - cast-active
 - 当前 canon/facts

@@ -18,6 +18,7 @@
 - `system/methodology/characters.md`
 - `system/methodology/relationship-lines.md`
 - `system/methodology/canon.md`
+- `system/methodology/chapter-supplement.md`
 - `system/methodology/novel-categories.md`
 - `system/methodology/genre-promises.md`
 - 第一章额外读取 `system/methodology/opening.md`
@@ -41,6 +42,7 @@
 - 本章的 `chapter_plan`
 - `chapter_plan.scenes` 中每个关键场景的呈现焦点、感官锚点、动作节拍、句式节奏和禁止概括项
 - 本章正文
+- 本章 `名词与剧情说明`
 - Writer 输出的实际正文字数
 - 当前 `state`
 - 当前 `open_loops`
@@ -103,7 +105,10 @@
 ## 结构检查
 
 - [ ] 正文实际字数落在 length_plan.min_chars 与 length_plan.max_chars 之间？
-- [ ] 字数统计排除了标题、元数据、审阅报告和空行？
+- [ ] 字数统计排除了标题、元数据、审阅报告、名词与剧情说明和空行？
+- [ ] 章节末尾是否包含 `## 名词与剧情说明`？
+- [ ] 名词与剧情说明是否只解释本章已显露信息，没有新增正文未写事件、未登记事实或超出揭露窗口的信息？
+- [ ] 名词与剧情说明是否没有替代正文中必须呈现的关键因果、动作、证据来源或角色选择？
 - [ ] 正文执行了 chapter_plan 的 scenes？
 - [ ] 每个关键场景都有前因、目标、阻碍、行动选择、结果变化和后续影响？
 - [ ] 每个关键场景都执行了呈现焦点、至少2个感官锚点、动作节拍、句式节奏和禁止概括项？

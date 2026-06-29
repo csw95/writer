@@ -27,6 +27,7 @@ python3 tools/validate-novel.py <novel_id> --chapter <N>
 - [ ] **P1-关系线**: 本章关系线操作来自 chapter_plan.relationship_line_plan？
 - [ ] **P1-事实显露**: 本章事实操作来自 chapter_plan.canon_fact_plan？
 - [ ] **P1-叙事呈现**: 本章执行了 chapter_plan 中每个关键场景的呈现焦点、感官锚点、动作节拍、句式节奏和禁止概括项？
+- [ ] **P1-补充说明**: 章节末尾包含 `## 名词与剧情说明`，且未越过本章显露边界？
 - [ ] **P1-分类**: 本章 classification 继承 premise 的频道、主分类、细分类和标签？
 - [ ] **P1-连续性**: 时间线、地点、人物位置、战力资源和敌对势力行动与 state 连续？
 - [ ] **P2-爽点**: 本章包含至少1个爽点机制？
@@ -39,6 +40,9 @@ python3 tools/validate-novel.py <novel_id> --chapter <N>
 
 - [ ] chapter_plan 包含 length_plan？
 - [ ] 正文字数统计不包含标题、元数据、审阅报告或空行？
+- [ ] 正文字数统计不包含 `名词与剧情说明`？
+- [ ] 章节末尾的 `名词与剧情说明` 解释了本章关键专有名词、规则口径、证据链或剧情逻辑？
+- [ ] `名词与剧情说明` 没有新增正文未写事件、未登记事实或超出本章 Fact 显露上限的剧透？
 - [ ] 正文实际字数在 length_plan.min_chars 与 length_plan.max_chars 之间？
 - [ ] 如超出 max_chars 20%，是否属于已声明的高潮/终章/特殊章节？
 - [ ] 章节包含完整的5步结构（冲突→压制→变化→反转/升级→收束+钩子）？
