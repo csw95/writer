@@ -8,12 +8,12 @@
 - 已解决且超出活跃窗口的修复项写入 `resolved-repairs.md`。
 
 ## 当前归档状态
-- **last_archived_chapter**: 0
-- **archive_files**: []
+- **last_archived_chapter**: 12
+- **archive_files**: [`chapters-0001-0050.md`]
 - **current_state_size_limit**: 80KB
 - **archive_trigger**: recent_chapter_summaries>20 或 scene_causal_chains>10 或 resolved repair 过多 或 current-state.md>80KB 或 Arc 完成
 
 ## 归档文件索引
 | 文件 | 覆盖章节 | 内容类型 | 创建时间 | 备注 |
 |------|----------|----------|----------|------|
-| N/A | N/A | N/A | N/A | 尚未生成正文，无归档 |
+| `chapters-0001-0050.md` | Ch1-Ch12 | 场景因果链、阶段摘要、人物/关系、Fact/LOOP 变化 | 2026-07-01 | 因 scene_causal_chains 活跃窗口超过验证阈值而归档；Ch15 后追加 Ch12 场景链以维持活跃窗口 |
