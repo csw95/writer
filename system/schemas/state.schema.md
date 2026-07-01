@@ -25,7 +25,7 @@
 | classification.subcategory | string | ✅ | 细分类 |
 | classification.tags | string[] | ✅ | 2-6个卖点标签 |
 | state_archive | StateArchiveState | ✅ | State 归档索引、活跃窗口和最近归档章节 |
-| active_context | ActiveContextState | ✅ | cast-active / facts-active 的范围、更新时间和覆盖状态 |
+| active_context | ActiveContextState | ✅ | cast-active / facts-active / items-active 的范围、更新时间和覆盖状态 |
 | recent_chapter_summaries | ChapterSummary[] | ✅ | 最近章节摘要、局势变化和承接点；默认只保留最近 20 章，旧内容进入 state/archive |
 | timeline | TimelineState | ✅ | 当前故事时间、时间跨度、地点变化和连续性风险 |
 | character_positions | CharacterPosition[] | ✅ | 关键人物位置、行动和可达性 |
@@ -51,7 +51,8 @@
 | protagonist.reputation_or_status | string | ✅ | 声望、地位、身份、职位或通缉状态 |
 | protagonist.resources | string[] | ✅ | 关键资源/物品 |
 | protagonist.relationships | Relationship[] | ✅ | 关键人际关系 |
-| power_resources | PowerResourceState[] | ✅ | 战力、能力、资源、道具、伤势、声望和地位台账 |
+| power_resources | PowerResourceState[] | ✅ | 战力、能力、资源、道具、关键物品、伤势、声望和地位台账 |
+| key_items | KeyItemState[] | ✅ | 关键物品持有者、位置、状态、生命周期和下一节点 |
 | relationship_lines | RelationshipLine[] | ✅ | 长期关系线状态、阶段节点和下一计划推进 |
 | protagonist.current_goal | string | ✅ | 当前最紧迫目标 |
 | protagonist.arc_state | string | ✅ | Want/Need/Lie/Wound 当前推进 |
@@ -162,6 +163,7 @@
 {
   "cast_active": "novels/{novel_id}/characters/cast-active.md",
   "facts_active": "novels/{novel_id}/canon/facts-active.md",
+  "items_active": "novels/{novel_id}/canon/items-active.md",
   "scope": "Part 001 / Volume 001 / Arc 001",
   "covers_next_chapters": "Ch2-Ch6",
   "last_refreshed_chapter": 1,
@@ -190,16 +192,16 @@
   "state": "planned/active/dormant/converging/resolved/abandoned_with_reason",
   "mainline_service": "服务主线方式",
   "next_node": "下一计划节点",
-  "related_facts_loops": ["FACT-001", "LOOP-001"]
+  "related_facts_items_loops": ["FACT-001", "ITEM-001", "LOOP-001"]
 }
 ```
 
 归档规则：
 
 1. `current-state.md` 只保留最近 20 章章节摘要和最近 10 章场景因果链。
-2. 更早的章节摘要、因果链、时间地点变化、人物关系变化、战力资源变化、Fact 显露和 LOOP 变化必须写入 `state/archive/`。
+2. 更早的章节摘要、因果链、时间地点变化、人物关系变化、战力资源变化、关键物品变化、Fact 显露和 LOOP 变化必须写入 `state/archive/`。
 3. `state_archive.last_archived_chapter` 必须小于等于 `last_completed_chapter`。
-4. 活跃 Fact / LOOP / REL 的当前状态仍必须保留在 `current-state.md` 中，不能只存在归档。
+4. 活跃 Fact / ITEM / LOOP / REL 的当前状态仍必须保留在 `current-state.md` 中，不能只存在归档。
 5. 归档操作不得改变 `last_completed_chapter` 或 `next_chapter_to_generate`。
 6. `repair_log` 只保留待处理、处理中、阻塞、高风险和最近 20 章内解决的修复项；更早的已解决项进入 `state/archive/resolved-repairs.md`。
 
@@ -244,12 +246,28 @@
 
 ```json
 {
-  "item": "战力/能力/资源/道具/伤势/声望/地位",
+  "item": "战力/能力/资源/道具/关键物品/伤势/声望/地位",
   "current_state": "当前值或状态",
   "last_change": "最近变化",
   "change_reason": "变化原因",
   "cost_or_limit": "使用限制或代价",
   "next_change_condition": "下次可变化条件"
+}
+```
+
+## KeyItemState 结构
+
+```json
+{
+  "item_id": "ITEM-001",
+  "name": "旧巡夜印",
+  "current_holder": "CHAR-PROTAGONIST",
+  "current_location": "LOC-OLD-CITY",
+  "current_status": "残损，可作为线索但非完整证据",
+  "lifecycle_stage": "获得",
+  "chapter_change": "Chapter 1 主角拾得旧印",
+  "related_facts_items_loops": ["FACT-001", "ITEM-001", "LOOP-001"],
+  "next_planned_node": "Chapter 4 被识得旧印纹路"
 }
 ```
 
@@ -346,6 +364,7 @@
   "goal_drift": "无/低/中/高",
   "foreshadowing_overdue": "无/低/中/高",
   "canon_reveal_overreach": "无/低/中/高",
+  "key_item_lifecycle": "无/低/中/高",
   "timeline_location": "无/低/中/高",
   "power_resource": "无/低/中/高",
   "character_drift": "无/低/中/高"
@@ -358,7 +377,7 @@
 {
   "id": "REPAIR-001",
   "found_chapter": 1,
-  "type": "设定矛盾/时间线矛盾/人物行为矛盾/战力资源矛盾/伏笔冲突/动机不成立",
+  "type": "设定矛盾/时间线矛盾/人物行为矛盾/战力资源矛盾/关键物品矛盾/伏笔冲突/动机不成立",
   "severity": "阻塞/高/中/低",
   "description": "问题描述",
   "repair_plan": "最小修改/补充铺垫/删除重写/后文解释",
@@ -395,10 +414,11 @@
 14. recent_chapter_summaries 必须包含最新章节目标、核心事件、局势变化、章末钩子和下一章承接点，且默认只保留最近 20 章；超过窗口必须归档。
 15. timeline 与 character_positions 必须保证时间、地点、移动、通信、疗伤和冷却连续。
 16. power_resources 中的变化必须有来源、代价、限制和下次变化条件。
+16a. key_items 必须与 canon/items.md、items-active.md 和 chapter_plan.key_item_plan 一致；未登记关键物品不得进入 state。
 17. antagonist_forces 必须记录当前目标、主动行动、资源/底牌、误判点和下一步压力。
 18. scene_causal_chains 必须记录最新章节关键场景的前因、行动选择、结果变化和后续影响，且默认只保留最近 10 章；超过窗口必须归档。
 19. quality_risks 必须追踪最近 3-5 章局势变化、最近 10-20 章剧情单元状态和主要连载风险。
-19a. active_context 必须说明 cast-active / facts-active 覆盖范围；缺失或过期时必须刷新。
+19a. active_context 必须说明 cast-active / facts-active / items-active 覆盖范围；缺失或过期时必须刷新。
 19b. review_trends 必须在阶段审稿或连续评分下滑时更新。
 19c. active 子情节必须有下一节点；resolved 子情节不得继续占用活跃推进窗口。
 20. repair_log 不得存在未处理的阻塞级问题进入下一章循环；已解决且超出活跃窗口的修复项必须归档到 `state/archive/resolved-repairs.md`。

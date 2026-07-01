@@ -7,7 +7,7 @@ automation:
 - review scoring dimensions and narrative gates
 - chapter body publishing hygiene
 - state run-control, Part fields, and archive pressure
-- Fact/Loop cross references
+- Fact/Item/Loop cross references
 - scoring weight drift between scoring.schema.md and review-rubric.md
 """
 
@@ -66,6 +66,7 @@ PLAN_SECTIONS = [
     "crisis_choice",
     "relationship_line_plan",
     "canon_fact_plan",
+    "key_item_plan",
     "scenes",
     "must_have_events",
     "爽点机制",
@@ -93,6 +94,7 @@ STATE_MARKERS = [
     "## 人物位置",
     "## 主角状态",
     "## 战力 / 能力 / 资源台账",
+    "## 关键物品状态",
     "## 敌对势力状态",
     "## 关系线状态",
     "## 关键事实显露状态",
@@ -108,11 +110,13 @@ BODY_FORBIDDEN_PATTERNS = [
     ("chapter label", r"\bChapter\s+\d+\b"),
     ("scene label", r"\bScene\s+\d+\b"),
     ("Fact ID", r"\bFACT-\d{3}\b"),
+    ("Item ID", r"\bITEM-\d{3}\b"),
     ("Loop ID", r"\bLOOP-\d{3}\b"),
     ("Relationship ID", r"\bREL-[A-Z0-9-]+-\d{3}\b"),
     ("state label", r"\bSTATE(?:[_\s-]?\d+|_[A-Z0-9_]+)\b"),
     ("chapter_plan field", r"\bchapter_plan\b"),
     ("canon_fact_plan field", r"\bcanon_fact_plan\b"),
+    ("key_item_plan field", r"\bkey_item_plan\b"),
     ("relationship_line_plan field", r"\brelationship_line_plan\b"),
     ("must_have_events field", r"\bmust_have_events\b"),
     ("pending_action field", r"\bpending_action\b"),
@@ -195,6 +199,8 @@ def validate_plan(novel_dir: Path, chapter: int, result: Result) -> None:
 
     if "FACT-" in text and not section_present(text, "canon_fact_plan"):
         result.error("chapter plan references FACT-* but lacks canon_fact_plan")
+    if "ITEM-" in text and not section_present(text, "key_item_plan"):
+        result.error("chapter plan references ITEM-* but lacks key_item_plan")
     if "REL-" in text and not section_present(text, "relationship_line_plan"):
         result.error("chapter plan references REL-* but lacks relationship_line_plan")
 
@@ -297,39 +303,59 @@ def defined_ids(text: str, prefix: str) -> set[str]:
     return set(re.findall(rf"\b{prefix}-\d{{3}}\b", text))
 
 
-def validate_fact_loop_refs(novel_dir: Path, result: Result) -> None:
+def validate_fact_item_loop_refs(novel_dir: Path, result: Result) -> None:
     facts_path = novel_dir / "canon/facts.md"
+    items_path = novel_dir / "canon/items.md"
     loops_path = novel_dir / "open-loops/loops.md"
-    if not facts_path.exists() or not loops_path.exists():
-        result.warn("skip Fact/Loop cross-reference check; canon or loops file missing")
+    if not facts_path.exists() or not items_path.exists() or not loops_path.exists():
+        result.warn("skip Fact/Item/Loop cross-reference check; canon/items/loops file missing")
         return
 
     facts_text = read(facts_path)
+    items_text = read(items_path)
     loops_text = read(loops_path)
     fact_defs = defined_ids(facts_text, "FACT")
+    item_defs = defined_ids(items_text, "ITEM")
     loop_defs = defined_ids(loops_text, "LOOP")
 
     fact_refs_in_loops = defined_ids(loops_text, "FACT")
+    item_refs_in_loops = defined_ids(loops_text, "ITEM")
     loop_refs_in_facts = defined_ids(facts_text, "LOOP")
+    item_refs_in_facts = defined_ids(facts_text, "ITEM")
+    fact_refs_in_items = defined_ids(items_text, "FACT")
+    loop_refs_in_items = defined_ids(items_text, "LOOP")
 
     for fact_id in sorted(fact_refs_in_loops - fact_defs):
         result.error(f"open-loops references undefined {fact_id}")
+    for item_id in sorted(item_refs_in_loops - item_defs):
+        result.error(f"open-loops references undefined {item_id}")
     for loop_id in sorted(loop_refs_in_facts - loop_defs):
         result.error(f"canon/facts references undefined {loop_id}")
+    for item_id in sorted(item_refs_in_facts - item_defs):
+        result.error(f"canon/facts references undefined {item_id}")
+    for fact_id in sorted(fact_refs_in_items - fact_defs):
+        result.error(f"canon/items references undefined {fact_id}")
+    for loop_id in sorted(loop_refs_in_items - loop_defs):
+        result.error(f"canon/items references undefined {loop_id}")
 
 
 def validate_active_context(novel_dir: Path, result: Result) -> None:
     cast_active = novel_dir / "characters/cast-active.md"
     facts_active = novel_dir / "canon/facts-active.md"
+    items_active = novel_dir / "canon/items-active.md"
     if not cast_active.exists():
         result.error(f"missing active cast file: {cast_active}")
     if not facts_active.exists():
         result.error(f"missing active facts file: {facts_active}")
+    if not items_active.exists():
+        result.error(f"missing active items file: {items_active}")
 
 
 def validate_schema_files(result: Result) -> None:
     required = [
         ROOT / "system/schemas/open-loops.schema.md",
+        ROOT / "system/schemas/item.schema.md",
+        ROOT / "system/methodology/items.md",
         ROOT / "system/templates/active-context-refresh.md",
     ]
     for path in required:
@@ -367,7 +393,7 @@ def main() -> int:
             validate_state(novel_dir, result)
             validate_active_context(novel_dir, result)
             validate_part_file(novel_dir, result)
-            validate_fact_loop_refs(novel_dir, result)
+            validate_fact_item_loop_refs(novel_dir, result)
             if args.chapter is not None:
                 validate_plan(novel_dir, args.chapter, result)
                 validate_chapter_body(novel_dir, args.chapter, result)

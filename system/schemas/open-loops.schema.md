@@ -17,6 +17,7 @@
 | latest_payoff_chapter | integer/string | ✅ | 最晚回收章节或阶段 |
 | overdue_plan | string | ✅ | 逾期处理方案 |
 | related_facts | string[] | ✅ | 关联 `FACT-*`；无 Fact 时必须写明确未来答案 |
+| related_items | string[] | 否 | 关联 `ITEM-*`；物品线索、物证、信物、禁物等伏笔必须填写 |
 | related_loops | string[] | 否 | 关联 `LOOP-*` |
 | priority | enum | ✅ | 主线/支线/彩蛋 |
 | mainline_service | string | ✅ | 服务什么主线、人物、关系、事实或类型承诺 |
@@ -39,6 +40,7 @@
   "latest_payoff_chapter": 80,
   "overdue_plan": "若 Ch72 未推进，Ch73-75 必须补一次旧碑证据或调整 Arc 计划",
   "related_facts": ["FACT-003"],
+  "related_items": ["ITEM-001"],
   "related_loops": [],
   "priority": "主线",
   "mainline_service": "支撑主角规则破局和沈家旧案",
@@ -60,11 +62,12 @@
 ## 验证规则
 
 1. `loop_id` 必须唯一且稳定，不得复用或重命名。
-2. 每个长期伏笔必须绑定至少一个 `FACT-*`，或在 `true_function` 中写明确未来答案。
+2. 每个长期伏笔必须绑定至少一个 `FACT-*`、`ITEM-*`，或在 `true_function` 中写明确未来答案。
 3. `planned_payoff_chapter` 必须小于等于 `latest_payoff_chapter`；使用阶段描述时必须能落到具体 Arc / Volume。
 4. 逾期伏笔不得直接删除，只能标记为逾期、提前回收、转为支线或废弃需解释。
 5. 已回收伏笔必须记录回收章节、回收方式和回收质量。
 6. `related_facts` 中的 Fact ID 必须存在于 `canon/facts.md`。
-7. `related_loops` 中的 Loop ID 必须存在于 `open-loops/loops.md`。
-8. chapter_plan 新埋、推进或回收伏笔时，必须同步 `open-loops/loops.md`。
-9. State Manager 只能更新状态、回收信息、逾期处理和修订记录，不得无审批改写长期伏笔的真实功能。
+7. `related_items` 中的 Item ID 必须存在于 `canon/items.md`。
+8. `related_loops` 中的 Loop ID 必须存在于 `open-loops/loops.md`。
+9. chapter_plan 新埋、推进或回收伏笔时，必须同步 `open-loops/loops.md`。
+10. State Manager 只能更新状态、回收信息、逾期处理和修订记录，不得无审批改写长期伏笔的真实功能。

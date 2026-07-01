@@ -5,7 +5,7 @@ State 归档协议。用于控制 `state/current-state.md` 体积，避免超长
 ## 核心原则
 
 - `state/current-state.md` 只保存当前运行所需的活跃窗口和全局索引。
-- 已完成章节的详细摘要、场景因果链、资源变化、关系变化、事实显露和伏笔变化必须归档到 `state/archive/`。
+- 已完成章节的详细摘要、场景因果链、资源变化、关键物品变化、关系变化、事实显露和伏笔变化必须归档到 `state/archive/`。
 - 归档不得丢失可恢复信息；当前 state 必须能通过归档索引定位历史状态。
 
 ## 目录结构
@@ -38,7 +38,7 @@ novels/{novel_id}/state/
 - 最近 20 章摘要。
 - 最近 10 章关键场景因果链。
 - 当前时间线、地点、人物位置、主角状态、敌对势力状态。
-- 活跃关系线、活跃事实显露状态、活跃伏笔摘要。
+- 活跃关系线、活跃事实显露状态、活跃关键物品状态、活跃伏笔摘要。
 - 未解决冲突、质量风险、阻塞级或高风险 repair，以及最近 20 章内解决的 repair。
 - 归档索引：最近归档章节、归档文件列表、历史查询入口。
 
@@ -47,9 +47,9 @@ novels/{novel_id}/state/
 ```markdown
 # State Archive Index — {novel_id}
 
-| 章节范围 | 文件 | 摘要 | 关键 Fact | 关键 LOOP | 关键 REL |
-|----------|------|------|-----------|-----------|----------|
-| Ch1-Ch50 | chapters-0001-0050.md | {阶段摘要} | FACT-001 | LOOP-001 | REL-MAIN-001 |
+| 章节范围 | 文件 | 摘要 | 关键 Fact | 关键 Item | 关键 LOOP | 关键 REL |
+|----------|------|------|-----------|-----------|-----------|----------|
+| Ch1-Ch50 | chapters-0001-0050.md | {阶段摘要} | FACT-001 | ITEM-001 | LOOP-001 | REL-MAIN-001 |
 ```
 
 ## 分片归档格式
@@ -70,6 +70,8 @@ novels/{novel_id}/state/
 ## 人物 / 关系变化
 
 ## 战力 / 资源变化
+
+## 关键物品变化
 
 ## 敌对势力行动变化
 
@@ -96,5 +98,5 @@ novels/{novel_id}/state/
 - [ ] 归档文件包含被移出 current-state 的章节范围。
 - [ ] 已解决且超出活跃窗口的 repair 已进入 `state/archive/resolved-repairs.md`。
 - [ ] `archive/index.md` 能定位每个归档分片。
-- [ ] 活跃 Fact / LOOP / REL 的当前状态仍在 current-state 中可见。
+- [ ] 活跃 Fact / ITEM / LOOP / REL 的当前状态仍在 current-state 中可见。
 - [ ] 归档后 `run_lock` 已清除，或本次归档作为 pending_action 完成记录在 run 日志中。

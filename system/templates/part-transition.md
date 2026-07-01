@@ -15,6 +15,7 @@
 - `novels/{novel_id}/world/worldbuilding.md`
 - `novels/{novel_id}/characters/cast.md`
 - `novels/{novel_id}/canon/facts.md`
+- `novels/{novel_id}/canon/items.md`
 - `novels/{novel_id}/open-loops/loops.md`
 - `novels/{novel_id}/structure/long-term-arc.md`
 - 当前 Part 文件
@@ -33,6 +34,7 @@
 - 下一 Part 关键 Volume 列表，并至少补齐下一 Volume 文件。
 - 下一 Part 主要人物命运节点、关系线推进/暂停/分裂/重构/回收计划。
 - 下一 Part 事实显露计划：Fact ID、显露层级、误导/维持/揭露窗口和角色知情限制。
+- 下一 Part 关键物品生命周期计划：Item ID、初现/获得/误判/代价显露/转移/损毁/回收/退场窗口和持有位置变化。
 - 下一 Part 伏笔计划：新增、推进、回收、废弃处理和逾期风险。
 - 下一 Part 后续至少 3-5 章方向，以及首个 Arc 的人物门禁、关系线节拍和事实显露节拍。
 - 更新 state 的当前 Part / Volume / Arc 信息、下一章目标和运行控制字段。
@@ -46,7 +48,8 @@
 - [ ] 所有关键人物已在 `characters/cast.md` 建档或补齐最小画像和 Part 命运方向。
 - [ ] 所有关系线重大推进、暂停、分裂、重构或回收已在 Part 文件中提前编排。
 - [ ] 所有核心事实、身份秘密、能力真相、制度真相已在 `canon/facts.md` 登记，并声明 Part 内显露上限。
-- [ ] 所有长期伏笔绑定 Fact ID 或明确未来答案，并处理上一 Part 的逾期伏笔。
+- [ ] 所有关键物品已在 `canon/items.md` 登记，并声明 Part 内生命周期、持有位置、代价限制、回收/退场窗口和操作上限。
+- [ ] 所有长期伏笔绑定 Fact ID、Item ID 或明确未来答案，并处理上一 Part 的逾期伏笔。
 - [ ] 下一 Volume 与下一 Arc 文件已可支持下一章规划。
 - [ ] state 的 `pending_action` 已在完成后置为 none 或下一项必要动作。
 - [ ] `next_chapter_to_generate` 未被跳号。
@@ -54,7 +57,7 @@
 
 ## 失败处理
 
-若缺少人物、关系线、事实库、世界规则、伏笔答案或下一 Volume/Arc：
+若缺少人物、关系线、事实库、关键物品、世界规则、伏笔答案或下一 Volume/Arc：
 
 - 不得生成新章。
 - 设置 `pending_action: content_fill`。

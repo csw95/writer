@@ -62,7 +62,7 @@
 
 | pending_action | 本次运行处理方式 |
 |----------------|------------------|
-| content_fill | 补齐缺失的 premise（含平台上架信息）/world/characters/canon/volume/arc/state/open_loops，不生成章节 |
+| content_fill | 补齐缺失的 premise（含平台上架信息）/world/characters/canon/items/volume/arc/state/open_loops，不生成章节 |
 | repair | 处理 `repair_log` 中未解决问题，不生成新章 |
 | plan_adjust | 调整下一章 chapter_plan 或后续 3-5 章节奏，不写正文 |
 | stage_review_5ch | 按 `stage-review.md` 执行最近 3-5 章审稿 |
@@ -103,8 +103,8 @@
 - `last_completed_chapter + 1 = next_chapter_to_generate`
 - 当前无未处理阻塞级 repair
 - 上一章 review 通过（第一章除外）
-- premise/world/characters/canon/volume/arc/state/open_loops 已补齐
-- cast-active/facts-active 已覆盖当前 Arc；若缺失或过期，先按 `active-context-refresh.md` 刷新
+- premise/world/characters/canon/items/volume/arc/state/open_loops 已补齐
+- cast-active/facts-active/items-active 已覆盖当前 Arc；若缺失或过期，先按 `active-context-refresh.md` 刷新
 - 如 length_tier = ultra_long，当前 part 文件已补齐
 - current-state 未超过归档阈值；若超过，必须先处理 `pending_action: state_archive`
 - premise 已补齐平台上架信息：上架书名、500字以内作品简介、3-6个平台标签、点击信号和标签合规检查

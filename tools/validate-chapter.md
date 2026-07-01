@@ -8,7 +8,7 @@
 python3 tools/validate-novel.py <novel_id> --chapter <N>
 ```
 
-该脚本用于检查 chapter_plan 必填字段、review 评分维度、state 活跃窗口/归档压力、Fact/Loop 交叉引用和评分权重漂移。人工清单用于补充判断叙事质量和修复建议。
+该脚本用于检查 chapter_plan 必填字段、review 评分维度、state 活跃窗口/归档压力、Fact/Item/Loop 交叉引用和评分权重漂移。人工清单用于补充判断叙事质量和修复建议。
 
 ## 快速验证（必查项）
 
@@ -19,18 +19,20 @@ python3 tools/validate-novel.py <novel_id> --chapter <N>
 - [ ] **P0-因果**: 本章关键场景均有前因、行动、结果变化和后续影响？
 - [ ] **P0-设定**: 本章未引入未定义世界观元素？
 - [ ] **P0-事实**: 本章未引入未登记核心事实，且未违背 canon/facts.md？
+- [ ] **P0-物品**: 本章未引入未登记关键物品，且未违背 canon/items.md？
 - [ ] **P0-修复**: 本章没有跳过阻塞级错误修复提案？
-- [ ] **P0-正文语域**: `## 正文` 到 `---` 之间没有 Ch/Chapter 编号、FACT/LOOP/REL ID、Scene/STATE、chapter_plan/state 字段名、AI 角色名或运行控制字段等内部标记？
+- [ ] **P0-正文语域**: `## 正文` 到 `---` 之间没有 Ch/Chapter 编号、FACT/ITEM/LOOP/REL ID、Scene/STATE、chapter_plan/state 字段名、AI 角色名或运行控制字段等内部标记？
 - [ ] **P1-驱动**: 本章由 chapter_plan 驱动？
 - [ ] **P1-状态**: 本章基于 state 生成？
 - [ ] **P1-字数**: 本章正文字数符合 length_plan？
 - [ ] **P1-推进**: 本章推进了至少1个剧情变量？
 - [ ] **P1-关系线**: 本章关系线操作来自 chapter_plan.relationship_line_plan？
 - [ ] **P1-事实显露**: 本章事实操作来自 chapter_plan.canon_fact_plan？
+- [ ] **P1-关键物品**: 本章关键物品操作来自 chapter_plan.key_item_plan？
 - [ ] **P1-叙事呈现**: 本章执行了 chapter_plan 中每个关键场景的呈现焦点、感官锚点、动作节拍、句式节奏和禁止概括项？
 - [ ] **P1-补充说明**: 章节末尾包含 `## 名词与剧情说明`，且未越过本章显露边界？
 - [ ] **P1-分类**: 本章 classification 继承 premise 的频道、主分类、细分类和标签？
-- [ ] **P1-连续性**: 时间线、地点、人物位置、战力资源和敌对势力行动与 state 连续？
+- [ ] **P1-连续性**: 时间线、地点、人物位置、战力资源、关键物品和敌对势力行动与 state 连续？
 - [ ] **P2-爽点**: 本章包含至少1个爽点机制？
 - [ ] **P2-类型承诺**: 本章兑现了 chapter_plan 声明的类型承诺？
 - [ ] **P2-情绪曲线**: 本章完成了声明的情绪曲线？
@@ -42,7 +44,7 @@ python3 tools/validate-novel.py <novel_id> --chapter <N>
 - [ ] chapter_plan 包含 length_plan？
 - [ ] 正文字数统计不包含标题、元数据、审阅报告或空行？
 - [ ] 正文字数统计不包含 `名词与剧情说明`？
-- [ ] 正文发布区没有把 chapter_plan、state、review、Fact/Loop/REL 台账或运行控制里的内部标记原样写入读者文本？
+- [ ] 正文发布区没有把 chapter_plan、state、review、Fact/Item/Loop/REL 台账或运行控制里的内部标记原样写入读者文本？
 - [ ] 章节末尾的 `名词与剧情说明` 解释了本章关键专有名词、规则口径、证据链或剧情逻辑？
 - [ ] `名词与剧情说明` 没有新增正文未写事件、未登记事实或超出本章 Fact 显露上限的剧透？
 - [ ] 正文实际字数在 length_plan.min_chars 与 length_plan.max_chars 之间？
@@ -51,13 +53,16 @@ python3 tools/validate-novel.py <novel_id> --chapter <N>
 - [ ] 正文执行了 chapter_plan 的 scenes？
 - [ ] 每个关键场景都有前因、目标、阻碍、行动选择、结果变化、后续影响？
 - [ ] 每个关键场景都有呈现焦点、至少2个感官锚点、动作节拍、句式节奏和禁止概括项？
-- [ ] 每个关键场景都推动主线、人物、关系、伏笔、情绪、设定显露、战力资源或地点状态中的至少一项？
+- [ ] 每个关键场景都推动主线、人物、关系、伏笔、情绪、设定显露、战力资源、关键物品或地点状态中的至少一项？
 - [ ] 主角的 crisis_choice 有真实代价？
 - [ ] chapter_plan 包含 relationship_line_plan？
 - [ ] 本章关系线推进/维持/暂停与当前 Volume / Arc 编排一致？
 - [ ] chapter_plan 包含 canon_fact_plan？
 - [ ] 本章引用的 Fact ID 均存在于 canon/facts.md？
 - [ ] 本章事实显露层级符合当前 Volume / Arc 的事实显露计划？
+- [ ] chapter_plan 包含 key_item_plan？
+- [ ] 本章引用的 Item ID 均存在于 canon/items.md？
+- [ ] 本章关键物品操作符合当前 Volume / Arc 的关键物品生命周期计划？
 - [ ] chapter_plan 包含 pre_write_state_check、antagonist_action_plan、power_resource_plan、time_location_continuity 和 downstream_impact？
 - [ ] 本章敌对势力或压力源有主动行动，而非只等待主角触发剧情？
 - [ ] 冲突在章节前15%内建立？
@@ -80,14 +85,14 @@ python3 tools/validate-novel.py <novel_id> --chapter <N>
 - [ ] 角色行为与设定性格一致？
 - [ ] 角色反常选择有外部压力、利益诱因、情感刺激、前文伏笔或成长节点支撑？
 - [ ] 战力数值使用在设定范围内？
-- [ ] 战力、能力、资源、道具、伤势、声望和地位变化有来源、代价和消耗？
+- [ ] 战力、能力、资源、道具、关键物品、伤势、声望和地位变化有来源、代价和消耗？
 - [ ] 时间线无矛盾？
 - [ ] 地理/位置描述一致？
 - [ ] 人物移动、通信、疗伤、冷却或行军成本成立？
 - [ ] 对话内容与角色知情状态一致？
 - [ ] 角色没有知道 canon/facts.md 中尚未显露或其不应知道的真相？
 - [ ] 正文没有把公开版本误写成真实事实，或把真实事实临场改写？
-- [ ] 没有用巧合、临时道具、设定补丁、反派降智或主角突然开窍解决核心矛盾？
+- [ ] 没有用巧合、临时道具、关键物品临时新功能、设定补丁、反派降智或主角突然开窍解决核心矛盾？
 
 ## 爽点验证
 
@@ -117,7 +122,7 @@ python3 tools/validate-novel.py <novel_id> --chapter <N>
 - [ ] 无长篇设定讲解？
 - [ ] 对话和描写交替出现？
 - [ ] 无重复叙述已发生事件？
-- [ ] 无内部接力标记泄漏到正文，例如 `Ch19`、`Chapter 20`、`Scene 1`、`FACT-001`、`LOOP-001`、`REL-*`、`STATE_*`、`chapter_plan`、`pending_action`、`run_lock` 或 AI 角色名？
+- [ ] 无内部接力标记泄漏到正文，例如 `Ch19`、`Chapter 20`、`Scene 1`、`FACT-001`、`ITEM-001`、`LOOP-001`、`REL-*`、`STATE_*`、`chapter_plan`、`key_item_plan`、`pending_action`、`run_lock` 或 AI 角色名？
 - [ ] 场景开头能快速建立空间关系、人物位置和压力来源？
 - [ ] 每个关键场景至少使用2个与冲突相关的感官锚点？
 - [ ] 关键动作有触发、反应、碰撞/受阻、代价和局势变化？
@@ -134,28 +139,33 @@ python3 tools/validate-novel.py <novel_id> --chapter <N>
 - [ ] 角色状态与上一章 state 连续？
 - [ ] 情感、手足、同袍、师徒、敌友或阵营信任线没有未规划重大推进？
 - [ ] 历史旧案、暗线真相、身份秘密、能力代价、阵营隐情、物品真相或制度真相没有未规划揭露？
+- [ ] 关键物品持有者、位置、状态、生命周期、代价限制和功能显露没有未规划变化？
 - [ ] 伏笔操作有记录（推进/新埋/回收）？
 - [ ] 新伏笔包含计划回收和最晚回收章节？
-- [ ] 长期伏笔绑定了对应 Fact ID 或明确未来答案？
+- [ ] 长期伏笔绑定了对应 Fact ID、Item ID 或明确未来答案？
+- [ ] 物品伏笔绑定了对应 Item ID，并在 canon/items.md 中可追踪？
 - [ ] 活跃伏笔无逾期未处理项？
-- [ ] state 的最近章节摘要、场景因果链、时间线、地点、战力资源、敌对势力行动和错误修复台账已更新？
+- [ ] state 的最近章节摘要、场景因果链、时间线、地点、战力资源、关键物品、敌对势力行动和错误修复台账已更新？
 - [ ] state 的最近章节摘要只保留最近 20 章、场景因果链只保留最近 10 章，旧内容已归档到 state/archive？
-- [ ] open_loops 中新增伏笔有计划回收、最晚回收、逾期处理方案和关联 Fact ID 或明确未来答案？
+- [ ] open_loops 中新增伏笔有计划回收、最晚回收、逾期处理方案和关联 Fact ID、Item ID 或明确未来答案？
 
 ## 自动化前置验证
 
 - [ ] premise、world、characters、long-term-arc、volume、arc 均已补齐？
 - [ ] canon/facts.md 已补齐，当前 Arc 涉及的 Fact ID、显露层级和揭露窗口清晰？
-- [ ] characters/cast-active.md 与 canon/facts-active.md 已覆盖当前 Arc 和后续 3-5 章？
+- [ ] canon/items.md 已补齐，当前 Arc 涉及的 Item ID、生命周期、持有位置、状态、代价限制和回收/退场窗口清晰？
+- [ ] characters/cast-active.md、canon/facts-active.md 与 canon/items-active.md 已覆盖当前 Arc 和后续 3-5 章？
 - [ ] premise 已声明 channel、category、subcategory、tags？
 - [ ] premise 已声明 length_tier、目标章数、章节字数范围、目标总字数？
 - [ ] 最新 review 通过？
 - [ ] state.current_chapter 与最新章节一致？
-- [ ] state 的最近章节摘要、时间线、地点、人物位置、战力资源、敌对势力行动和错误修复台账与最新章节一致？
+- [ ] state 的最近章节摘要、时间线、地点、人物位置、战力资源、关键物品、敌对势力行动和错误修复台账与最新章节一致？
 - [ ] canon/facts.md 的显露状态与最新章节一致？
+- [ ] canon/items.md 的持有者、位置、状态和生命周期与最新章节一致？
 - [ ] 当前 Arc 后续至少3章目标清晰？
 - [ ] 当前 Arc 后续至少3章关系线推进/维持/暂停节点清晰？
 - [ ] 当前 Arc 后续至少3章事实显露/误导/维持节点清晰？
+- [ ] 当前 Arc 后续至少3章关键物品持有/位置/状态/生命周期节点清晰？
 - [ ] 当前 Arc 后续至少3章敌对势力主动行动、场景功能和资源战力变化清晰？
 - [ ] 当前无未处理的阻塞级错误修复提案？
 - [ ] 本批次 run 日志已创建（如执行批量任务）？

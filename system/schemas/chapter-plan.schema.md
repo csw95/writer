@@ -38,11 +38,12 @@
 | escalation.pressure_ladder | string[] | ✅ | 压力阶梯 |
 | pre_write_state_check | PreWriteStateCheck | ✅ | 写作前连续性、状态、边界和风险确认 |
 | antagonist_action_plan | AntagonistActionPlan | ✅ | 敌对势力或压力源主动行动 |
-| power_resource_plan | PowerResourcePlan | ✅ | 战力、能力、资源、道具、伤势和地位变化 |
+| power_resource_plan | PowerResourcePlan | ✅ | 战力、能力、资源、道具、关键物品、伤势和地位变化 |
 | time_location_continuity | TimeLocationContinuity | ✅ | 时间线、地点、人物可达性和移动成本 |
 | crisis_choice | CrisisChoice | ✅ | 主角必须面对的代价选择 |
 | relationship_line_plan | RelationshipLinePlan | ✅ | 本章关系线推进、维持、暂停和主次约束 |
 | canon_fact_plan | CanonFactPlan | ✅ | 本章引用的事实、显露层级、读者可见信息和角色知情变化 |
+| key_item_plan | KeyItemPlan | ✅ | 本章引用的关键物品、持有/位置/状态、允许操作、代价限制和生命周期变化 |
 | scenes | Scene[] | ✅ | 至少3个关键场景；每个场景必须包含因果字段和叙事呈现字段 |
 | scenes[].presentation_focus | string | ✅ | 本场景读者最该看见的画面、人物动作或物件状态 |
 | scenes[].sensory_anchors | string[] | ✅ | 至少2个与冲突相关的声音、光线、气味、温度、触感、疼痛或空间距离线索 |
@@ -202,6 +203,31 @@
 }
 ```
 
+## KeyItemPlan 结构
+
+```json
+{
+  "involved_items": ["ITEM-001"],
+  "state_before": "ITEM-001 由主角私藏，残损，可作为线索",
+  "allowed_operations": ["展示", "误判", "转移", "损坏", "使用", "代价显露"],
+  "operation_details": [
+    {
+      "item_id": "ITEM-001",
+      "operation": "展示",
+      "holder_change": "无",
+      "location_change": "无",
+      "status_change": "残留朱砂痕被看见",
+      "cost_or_limit": "只能证明旧印存在，不能证明完整真相",
+      "related_facts": ["FACT-001"],
+      "related_loops": ["LOOP-001"]
+    }
+  ],
+  "state_after": "主角仍持有，陆青禾部分注意到旧印异常",
+  "downstream_impact": "后续 3-5 章引来巡夜司查问",
+  "boundary_check": "无未建档关键物品、无临时新功能、无绕过代价或越过 Fact 显露窗口"
+}
+```
+
 ## SceneBudget 结构
 
 ```json
@@ -264,6 +290,7 @@
   "surface_function": "表面作用",
   "true_function": "真正作用",
   "related_facts": ["FACT-001"],
+  "related_items": ["ITEM-001"],
   "description": "伏笔内容",
   "planned_payoff_chapter": 10,
   "latest_payoff_chapter": 20
@@ -368,6 +395,7 @@
   "pleasure_fatigue": "无/低/中/高",
   "foreshadowing_overdue": "无/低/中/高",
   "canon_fact_risk": "无/低/中/高",
+  "key_item_lifecycle": "无/低/中/高",
   "goal_drift": "无/低/中/高",
   "timeline_location": "无/低/中/高",
   "power_resource": "无/低/中/高",
@@ -396,10 +424,12 @@
 17. canon_fact_plan 必须声明本章事实操作；任何历史旧案、暗线真相、身份秘密、能力代价、阵营隐情、物品真相或制度底层规则，都必须引用已登记 Fact ID。
 18. canon_fact_plan.reveal_level 必须符合当前 Volume / Arc 的事实显露计划，不得超过 canon/facts.md 中的揭露窗口。
 19. 角色知情变化必须与 canon/facts.md 中的知情状态连续，不得让角色越权知道未显露真相。
-20. 新埋、推进或回收长期伏笔时，应通过 foreshadowing.related_facts 绑定 Fact ID 或说明明确未来答案。
-21. pre_write_state_check 必须承接 state 的最近章节摘要、上一章钩子、时间地点、人物状态、资源战力和错误修复台账。
+20. 新埋、推进或回收长期伏笔时，应通过 foreshadowing.related_facts / related_items 绑定 Fact ID、Item ID 或说明明确未来答案。
+21. pre_write_state_check 必须承接 state 的最近章节摘要、上一章钩子、时间地点、人物状态、资源战力、关键物品和错误修复台账。
 22. antagonist_action_plan 必须说明敌对势力或压力源的主动行动；反派失败必须有合理误判来源。
-23. power_resource_plan 必须符合 world 中的战力、能力、资源、道具和代价约束。
-24. time_location_continuity 必须保证人物可达、移动成本成立、时间线无矛盾。
-25. downstream_impact 必须说明本章结果影响后续 3-5 章的方式。
-26. 禁止用巧合、临场道具、设定补丁、反派降智或主角突然开窍解决核心矛盾。
+23. key_item_plan 必须引用已登记 `ITEM-*`，并声明持有者、位置、状态、允许操作、代价限制、生命周期变化和禁止越界。
+24. key_item_plan 的物品操作必须符合 canon/items.md、items-active.md、当前 Volume / Arc 生命周期计划和 canon_fact_plan 显露边界。
+25. power_resource_plan 必须符合 world 中的战力、能力、资源、道具、关键物品和代价约束。
+26. time_location_continuity 必须保证人物可达、移动成本成立、时间线无矛盾。
+27. downstream_impact 必须说明本章结果影响后续 3-5 章的方式。
+28. 禁止用巧合、临场道具、关键物品临时新功能、设定补丁、反派降智或主角突然开窍解决核心矛盾。

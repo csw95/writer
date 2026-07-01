@@ -21,7 +21,7 @@
 | current_reveal_state | enum | ✅ | 未显露/已暗示/误导中/部分揭露/公开揭露/已反转 |
 | immutable_constraints | string[] | ✅ | 后续不得改写的硬事实 |
 | related_characters | string[] | 否 | 关联角色ID |
-| related_forces_locations_items | string[] | 否 | 关联势力、地点或物品 |
+| related_forces_locations_items | string[] | 否 | 关联势力、地点或物品；关键物品使用 `ITEM-*` |
 | related_loops | string[] | 否 | 关联 `LOOP-*` |
 | related_chapter_plans | string[] | 否 | 已引用该事实的章节计划 |
 | revision_log | Revision[] | 否 | 核心事实修订记录 |
@@ -69,8 +69,8 @@
 1. `fact_id` 必须唯一且稳定，不得复用或重命名。
 2. `true_fact` 必须具体到可验证，不能只写“另有隐情”。
 3. `public_version` 必须说明读者或世界中角色当前可能相信什么。
-4. 影响主角选择、阵营站位、历史因果、能力代价、身份秘密或伏笔回收的事实必须登记。
-5. chapter_plan 使用暗线、旧案、身份秘密、能力真相或历史关键事件时，必须引用对应 `fact_id`。
+4. 影响主角选择、阵营站位、历史因果、能力代价、身份秘密、关键物品真相或伏笔回收的事实必须登记。
+5. chapter_plan 使用暗线、旧案、身份秘密、能力真相、关键物品真相或历史关键事件时，必须引用对应 `fact_id`。
 6. `current_reveal_state` 只能根据已生成正文增量推进，不得提前标记公开揭露。
 7. State Manager 只能更新知情状态、显露状态、关联章节和修订日志；不得无审批改写 `true_fact` 或 `immutable_constraints`。
 8. Reviewer 发现正文违背 `true_fact`、让角色知道未显露事实、或公开超过 `reveal_window` 允许的信息时，必须判为阻塞。

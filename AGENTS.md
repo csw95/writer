@@ -15,19 +15,19 @@
 1. 当前总主线、当前 Part / Volume / Arc 目标。
 2. 当前章节目标、上一章钩子和后续至少 3 章方向。
 3. 当前时间线、地点、人物位置和行动连续性。
-4. 主角战力、资源、道具、伤势、情绪和内在弧光状态。
+4. 主角战力、资源、道具、关键物品持有/位置/状态、伤势、情绪和内在弧光状态。
 5. 主要人物状态、关系线状态、命运节点和禁止越界项。
 6. 敌对势力当前目标、资源、主动行动计划、误判点和底牌。
-7. 未回收伏笔、逾期伏笔、关联 Fact ID 和计划回收窗口。
-8. 已知设定限制、能力代价、资源守恒和世界规则边界。
+7. 未回收伏笔、逾期伏笔、关联 Fact / Item ID 和计划回收窗口。
+8. 已知设定限制、能力代价、资源守恒、关键物品生命周期和世界规则边界。
 
 每次写作后，AI 必须更新：
 
 1. 本章剧情摘要、完成目标和局势变化。
 2. 场景因果链：前因、行动、冲突、选择、结果、后果。
-3. 人物状态、关系状态、知情状态、战力资源和位置变化。
+3. 人物状态、关系状态、知情状态、战力资源、关键物品和位置变化。
 4. 新增 / 推进 / 回收伏笔及其计划回收窗口。
-5. 事实显露状态、读者已知、角色知情变化和禁止改写项。
+5. 事实显露状态、关键物品状态、读者已知、角色知情变化和禁止改写项。
 6. 章节后 `名词与剧情说明`：解释本章出现的专有名词、规则口径、证据链和容易误读的剧情逻辑，但不得提前剧透未显露事实。
 7. 未解决问题、下一章承接点和后续 3-5 章节奏风险。
 
@@ -62,6 +62,7 @@ writer/
 │   │   ├── characters.md
 │   │   ├── relationship-lines.md
 │   │   ├── canon.md
+│   │   ├── items.md
 │   │   ├── chapter-supplement.md
 │   │   ├── novel-categories.md
 │   │   ├── genre-promises.md
@@ -74,6 +75,7 @@ writer/
 │   ├── schemas/                    # 数据结构标准
 │   │   ├── chapter-plan.schema.md
 │   │   ├── canon-fact.schema.md
+│   │   ├── item.schema.md
 │   │   ├── state.schema.md
 │   │   └── scoring.schema.md
 │   └── templates/                  # 操作模板
@@ -90,6 +92,8 @@ writer/
 │       ├── characters/cast-active.md     # 当前 Arc 活跃人物轻量索引
 │       ├── canon/facts.md
 │       ├── canon/facts-active.md         # 当前 Arc 活跃事实轻量索引
+│       ├── canon/items.md                # 关键物品画像与生命周期台账
+│       ├── canon/items-active.md         # 当前 Arc 活跃关键物品轻量索引
 │       ├── structure/
 │       │   ├── long-term-arc.md
 │       │   ├── parts/              # ultra_long 必填：Part 级大阶段
@@ -113,7 +117,7 @@ writer/
 1. 分配 novel_id（如 novel-001）
 2. 复制 novels/_template/ → novels/<novel_id>/
 3. 按 system/templates/novel-init.md 执行 STATE 0 → STATE 1
-4. 输出 bible, world, characters, canon, structure, state, open-loops 初始化内容
+4. 输出 bible, world, characters, canon, items, structure, state, open-loops 初始化内容
 5. 完成开篇门禁后才允许进入章节循环
 ```
 
@@ -138,13 +142,15 @@ writer/
 - `characters/cast-active.md`：当前 Part / Volume / Arc 的活跃人物、即将入场人物和休眠人物索引
 - `canon/facts.md`：幕后事实台账、历史关键事实、暗线真相、身份秘密、能力/物品/制度真相、公开版本、知情状态、显露窗口、禁止改写项、关联伏笔
 - `canon/facts-active.md`：当前 Part / Volume / Arc 的活跃 Fact、即将触发事实和暂不触碰事实索引
+- `canon/items.md`：关键物品画像、持有者、位置、公开认知、真实功能、使用条件、代价限制、损坏/消耗/转移规则、生命周期、关联 Fact/Loop 和禁止改写项
+- `canon/items-active.md`：当前 Part / Volume / Arc 的活跃关键物品、即将触发物品和暂不触碰物品索引
 - `structure/long-term-arc.md`：全书阶段目标、冲突升级路线、节奏审稿节点、主要人物长期命运线、全书关系线主次规划
 - `structure/parts/part-001.md`：超长篇 Part 级目标、地图/阶层/规则跃迁、关键 Volume、人物命运、关系线、事实显露和伏笔计划
 - `structure/volumes/volume-001.md`：第一卷目标、人物配置与命运、关系线编排、反派主动计划、压力阶梯、伏笔计划
 - `structure/arcs/arc-001.md`：按篇幅档位规划的第一 Arc 目标、Arc 人物门禁、章节级关系线节拍、3-5章节奏窗口
-- `state/current-state.md`：当前剧情、时间线、地点、人物、战力资源、敌对势力、章节摘要、质量风险和错误修复台账
-- `state/archive/`：归档超过活跃窗口的历史摘要、场景因果链、资源变化、Fact/Loop/REL 变化和已解决修复项
-- `open-loops/loops.md`：伏笔台账格式
+- `state/current-state.md`：当前剧情、时间线、地点、人物、战力资源、关键物品、敌对势力、章节摘要、质量风险和错误修复台账
+- `state/archive/`：归档超过活跃窗口的历史摘要、场景因果链、资源变化、Fact/Loop/REL/ITEM 变化和已解决修复项
+- `open-loops/loops.md`：伏笔台账格式，长期伏笔必须绑定 Fact、Item 或明确未来答案
 
 缺少以上任一项，只允许进行内容补齐，不允许生成章节。
 
@@ -155,7 +161,7 @@ writer/
 - **平台标签**：3-6个，优先从目标平台可选标签或 `system/methodology/novel-categories.md` 标签库选择；优先覆盖主角标签、结构/爽点标签、世界标签和节奏标签。
 - **点击信号**：书名、简介和平台标签必须共同指向同一批可感知卖点；内部设定词可作为卖点标签保留，但目标平台无对应标签时不得强行写入平台标签。
 
-单章运行优先读取 `cast-active.md` 和 `facts-active.md` 作为轻量上下文；当本章涉及 active 文件未覆盖的人物或 Fact 时，必须按 `system/templates/active-context-refresh.md` 刷新 active 文件，或读取完整 `cast.md` / `facts.md` 的对应条目并同步补齐 active 文件。
+单章运行优先读取 `cast-active.md`、`facts-active.md` 和 `items-active.md` 作为轻量上下文；当本章涉及 active 文件未覆盖的人物、Fact 或关键物品时，必须按 `system/templates/active-context-refresh.md` 刷新 active 文件，或读取完整 `cast.md` / `facts.md` / `items.md` 的对应条目并同步补齐 active 文件。
 
 每次自动化运行开始前，必须先检查 `state/current-state.md` 的 `运行控制` 区块：
 
@@ -174,25 +180,27 @@ writer/
 
 `ultra_long` 必须额外维护 Part 层。Part 完成时只能设置 `pending_action: part_transition`，按 `system/templates/part-transition.md` 补齐下一 Part；不得在同一次单章运行中直接展开下一 Part 或继续生成下一章。
 
-`state/current-state.md` 只保留活跃窗口和当前运行所需状态：最近 20 章章节摘要、最近 10 章场景因果链、当前活跃关系/事实/伏笔和未解决修复项。更早的章节摘要、场景因果链、时间地点变化、人物关系变化、战力资源变化、Fact 显露、LOOP 变化和已解决修复项必须按 `system/templates/state-archive.md` 归档到 `state/archive/`，并在 current-state 保留归档索引。
+`state/current-state.md` 只保留活跃窗口和当前运行所需状态：最近 20 章章节摘要、最近 10 章场景因果链、当前活跃关系/事实/关键物品/伏笔和未解决修复项。更早的章节摘要、场景因果链、时间地点变化、人物关系变化、战力资源变化、关键物品变化、Fact 显露、LOOP 变化和已解决修复项必须按 `system/templates/state-archive.md` 归档到 `state/archive/`，并在 current-state 保留归档索引。
 
 幕后事实、历史关键事件、身份秘密、能力真相、阵营隐情、物品真相和制度底层规则必须按 `system/methodology/canon.md` 提前进入 `canon/facts.md`。凡会影响主角选择、阵营站位、人物动机、证据链、能力代价、伏笔回收、反转或终局因果的事实，必须拥有稳定 `FACT-*`；chapter_plan 引用相关暗线时必须标明 Fact ID。正文可以误导读者或只显露局部，但不得违背事实库，不得让角色知道未显露事实，不得临场改写核心真相。
 
-每章正文文件末尾必须按 `system/methodology/chapter-supplement.md` 追加 `## 名词与剧情说明`。该区块用于审阅和接力，说明本章已显露层级内的专有名词、制度/能力口径、证据链和复杂剧情逻辑；不计入正文字数，不得新增正文未写事件，不得替代正文必要因果，不得越过 `canon/facts.md`、`facts-active.md` 和 chapter_plan 的显露上限。
+关键物品必须按 `system/methodology/items.md` 提前进入 `canon/items.md`。凡会改变战斗、谈判、逃生、调查、证据链、人物选择、阵营站位、伏笔回收、资源边界或能力代价的物品，必须拥有稳定 `ITEM-*`，并记录持有者、位置、真实功能、公开认知、使用条件、代价限制、损坏/消耗/转移规则、生命周期阶段、关联 Fact/Loop 和禁止改写项；chapter_plan 使用关键物品时必须声明 `key_item_plan`。普通消耗品只进入 state 的资源变化，不需要建立 ITEM 台账。
+
+每章正文文件末尾必须按 `system/methodology/chapter-supplement.md` 追加 `## 名词与剧情说明`。该区块用于审阅和接力，说明本章已显露层级内的专有名词、制度/能力口径、关键物品口径、证据链和复杂剧情逻辑；不计入正文字数，不得新增正文未写事件，不得替代正文必要因果，不得越过 `canon/facts.md`、`facts-active.md`、`canon/items.md`、`items-active.md` 和 chapter_plan 的显露/操作上限。
 
 ### 4. 阶段审稿与错误修复
 
 超长篇必须定期自检，不能等写崩后再硬圆。
 
-- 每章：执行连续性、场景因果、人物一致性、设定边界和伏笔状态检查。
+- 每章：执行连续性、场景因果、人物一致性、关键物品生命周期、设定边界和伏笔状态检查。
 - 每 3-5 章：检查是否有明显局势变化、爽点是否重复、关系线是否越界。
 - 每 10-20 章：检查一个剧情单元是否闭环，压力阶梯是否升级，伏笔是否推进。
-- 每卷结束：检查主线目标、人物命运、关系线、事实库、世界规则和资源战力总账。
+- 每卷结束：检查主线目标、人物命运、关系线、事实库、关键物品、世界规则和资源战力总账。
 
 发现矛盾时，AI 不得直接覆盖历史章节或硬圆设定，必须先分类：
 
 ```text
-设定矛盾 / 时间线矛盾 / 人物行为矛盾 / 战力资源矛盾 / 伏笔冲突 / 动机不成立
+设定矛盾 / 时间线矛盾 / 人物行为矛盾 / 战力资源矛盾 / 关键物品矛盾 / 伏笔冲突 / 动机不成立
 ```
 
 然后提出并记录：
