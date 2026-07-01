@@ -5,6 +5,7 @@ This tool checks the structural issues that are easy to miss in long-running
 automation:
 - chapter_plan required sections
 - review scoring dimensions and narrative gates
+- chapter body publishing hygiene
 - state run-control, Part fields, and archive pressure
 - Fact/Loop cross references
 - scoring weight drift between scoring.schema.md and review-rubric.md
@@ -17,6 +18,7 @@ import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -99,6 +101,27 @@ STATE_MARKERS = [
     "## 审阅趋势",
     "## 子情节状态",
     "## 错误修复台账",
+]
+
+BODY_FORBIDDEN_PATTERNS = [
+    ("chapter shorthand", r"\bCh\d+\b"),
+    ("chapter label", r"\bChapter\s+\d+\b"),
+    ("scene label", r"\bScene\s+\d+\b"),
+    ("Fact ID", r"\bFACT-\d{3}\b"),
+    ("Loop ID", r"\bLOOP-\d{3}\b"),
+    ("Relationship ID", r"\bREL-[A-Z0-9-]+-\d{3}\b"),
+    ("state label", r"\bSTATE(?:[_\s-]?\d+|_[A-Z0-9_]+)\b"),
+    ("chapter_plan field", r"\bchapter_plan\b"),
+    ("canon_fact_plan field", r"\bcanon_fact_plan\b"),
+    ("relationship_line_plan field", r"\brelationship_line_plan\b"),
+    ("must_have_events field", r"\bmust_have_events\b"),
+    ("pending_action field", r"\bpending_action\b"),
+    ("run_lock field", r"\brun_lock\b"),
+    ("novel_id field", r"\bnovel_id\b"),
+    ("Planner AI role", r"\bPlanner\s+AI\b"),
+    ("Writer AI role", r"\bWriter\s+AI\b"),
+    ("Reviewer AI role", r"\bReviewer\s+AI\b"),
+    ("State Manager AI role", r"\bState\s+Manager\s+AI\b"),
 ]
 
 
@@ -188,6 +211,38 @@ def validate_review(novel_dir: Path, chapter: int, result: Result) -> None:
     for dim in NARRATIVE_DIMS:
         if not re.search(rf"\|\s*{re.escape(dim)}\s*\|", text):
             result.error(f"review missing narrative gate: {dim}")
+
+
+def body_span(text: str) -> Optional[tuple[int, int]]:
+    match = re.search(r"^##\s+正文\s*$\n([\s\S]*?)(?=^---\s*$)", text, re.M)
+    if not match:
+        return None
+    return match.start(1), match.end(1)
+
+
+def validate_chapter_body(novel_dir: Path, chapter: int, result: Result) -> None:
+    chapter_path = novel_dir / f"chapters/ch-{chapter:03d}.md"
+    if not chapter_path.exists():
+        result.error(f"missing chapter file: {chapter_path}")
+        return
+
+    text = read(chapter_path)
+    span = body_span(text)
+    if span is None:
+        result.error(f"chapter missing body publishing section before ---: {chapter_path}")
+        return
+
+    start, end = span
+    body = text[start:end]
+    for label, pattern in BODY_FORBIDDEN_PATTERNS:
+        for match in re.finditer(pattern, body):
+            absolute = start + match.start()
+            line_no = text.count("\n", 0, absolute) + 1
+            line = text.splitlines()[line_no - 1].strip()
+            result.error(
+                f"chapter body leaks internal marker ({label}) at line {line_no}: "
+                f"{match.group(0)} :: {line[:140]}"
+            )
 
 
 def section_block(text: str, title: str) -> str:
@@ -315,6 +370,7 @@ def main() -> int:
             validate_fact_loop_refs(novel_dir, result)
             if args.chapter is not None:
                 validate_plan(novel_dir, args.chapter, result)
+                validate_chapter_body(novel_dir, args.chapter, result)
                 validate_review(novel_dir, args.chapter, result)
 
     for warning in result.warnings:

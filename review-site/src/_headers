@@ -1,0 +1,10 @@
+/content-index.json
+  Cache-Control: no-store
+
+/content/*
+  Cache-Control: no-cache
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+

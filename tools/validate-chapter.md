@@ -20,6 +20,7 @@ python3 tools/validate-novel.py <novel_id> --chapter <N>
 - [ ] **P0-设定**: 本章未引入未定义世界观元素？
 - [ ] **P0-事实**: 本章未引入未登记核心事实，且未违背 canon/facts.md？
 - [ ] **P0-修复**: 本章没有跳过阻塞级错误修复提案？
+- [ ] **P0-正文语域**: `## 正文` 到 `---` 之间没有 Ch/Chapter 编号、FACT/LOOP/REL ID、Scene/STATE、chapter_plan/state 字段名、AI 角色名或运行控制字段等内部标记？
 - [ ] **P1-驱动**: 本章由 chapter_plan 驱动？
 - [ ] **P1-状态**: 本章基于 state 生成？
 - [ ] **P1-字数**: 本章正文字数符合 length_plan？
@@ -41,6 +42,7 @@ python3 tools/validate-novel.py <novel_id> --chapter <N>
 - [ ] chapter_plan 包含 length_plan？
 - [ ] 正文字数统计不包含标题、元数据、审阅报告或空行？
 - [ ] 正文字数统计不包含 `名词与剧情说明`？
+- [ ] 正文发布区没有把 chapter_plan、state、review、Fact/Loop/REL 台账或运行控制里的内部标记原样写入读者文本？
 - [ ] 章节末尾的 `名词与剧情说明` 解释了本章关键专有名词、规则口径、证据链或剧情逻辑？
 - [ ] `名词与剧情说明` 没有新增正文未写事件、未登记事实或超出本章 Fact 显露上限的剧透？
 - [ ] 正文实际字数在 length_plan.min_chars 与 length_plan.max_chars 之间？
@@ -115,6 +117,7 @@ python3 tools/validate-novel.py <novel_id> --chapter <N>
 - [ ] 无长篇设定讲解？
 - [ ] 对话和描写交替出现？
 - [ ] 无重复叙述已发生事件？
+- [ ] 无内部接力标记泄漏到正文，例如 `Ch19`、`Chapter 20`、`Scene 1`、`FACT-001`、`LOOP-001`、`REL-*`、`STATE_*`、`chapter_plan`、`pending_action`、`run_lock` 或 AI 角色名？
 - [ ] 场景开头能快速建立空间关系、人物位置和压力来源？
 - [ ] 每个关键场景至少使用2个与冲突相关的感官锚点？
 - [ ] 关键动作有触发、反应、碰撞/受阻、代价和局势变化？

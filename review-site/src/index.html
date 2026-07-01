@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>小说审阅站</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <div class="brand-mark">WR</div>
+          <div>
+            <div class="brand-title">小说审阅站</div>
+            <div class="brand-subtitle" id="generatedAt">加载中</div>
+          </div>
+          <button class="icon-button sidebar-close" id="sidebarClose" type="button" aria-label="关闭目录">
+            关闭
+          </button>
+        </div>
+
+        <label class="field">
+          <span>小说</span>
+          <select id="novelSelect"></select>
+        </label>
+
+        <label class="field">
+          <span>搜索</span>
+          <input id="searchInput" type="search" placeholder="标题、路径、摘要" />
+        </label>
+
+        <nav class="file-nav" id="fileNav" aria-label="审阅文件"></nav>
+      </aside>
+      <button class="sidebar-overlay" id="sidebarOverlay" type="button" aria-label="关闭目录遮罩"></button>
+
+      <main class="workspace">
+        <header class="topbar">
+          <button class="icon-button" id="menuButton" type="button" aria-label="打开目录" aria-controls="sidebar" aria-expanded="false">目录</button>
+          <div class="topbar-title">
+            <div class="eyebrow" id="sectionLabel">总览</div>
+            <h1 id="pageTitle">小说审阅站</h1>
+          </div>
+          <div class="topbar-actions" id="topbarActions"></div>
+        </header>
+
+        <section class="dashboard" id="dashboard"></section>
+        <section class="reader" id="reader"></section>
+      </main>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
