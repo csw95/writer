@@ -53,7 +53,7 @@
 ## 输出格式
 
 ```markdown
-# 第{N}章 — {章节标题}
+# 第{卷序中文}卷·{卷名} 第{N}章 — {章节标题}
 
 ## 正文
 
@@ -64,6 +64,7 @@
 ## 本章元数据
 
 - **chapter_id**: {N}
+- **volume_title**: 第{卷序中文}卷·{卷名}
 - **实际正文字数**: {不含标题、元数据、名词与剧情说明、空行}
 - **目标正文字数**: {来自 length_plan.target_chars}
 - **字数范围**: {length_plan.min_chars}-{length_plan.max_chars}

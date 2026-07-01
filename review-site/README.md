@@ -46,6 +46,8 @@ Root directory: 留空或仓库根目录
 
 更详细步骤见 [Cloudflare Pages 部署说明](./docs/cloudflare-pages.md)。
 
+访问控制配置见 [Cloudflare Access / Zero Trust 配置说明](./docs/access-zero-trust.md)。
+
 ## 环境变量
 
 | 变量 | 默认值 | 用途 |

@@ -179,6 +179,7 @@
 ### 验证
 
 - [ ] 正文包含所有 must_have_events
+- [ ] 正文一级标题包含当前卷序和卷名，格式为 `第{卷序中文}卷·{卷名} 第{N}章 — {章节标题}`
 - [ ] 正文实际字数落在 length_plan 的 min_chars 与 max_chars 之间
 - [ ] 正文字数统计不包含标题、元数据、审阅报告、名词与剧情说明或空行
 - [ ] `## 正文` 到 `---` 的正文发布区不包含 Ch/Chapter 编号、FACT/LOOP/REL ID、Scene/STATE、chapter_plan/state 字段名、AI 角色名或运行控制字段等内部标记
