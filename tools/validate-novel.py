@@ -226,6 +226,47 @@ def body_span(text: str) -> Optional[tuple[int, int]]:
     return match.start(1), match.end(1)
 
 
+def paragraph_blocks(text: str) -> list[tuple[int, str]]:
+    blocks: list[tuple[int, str]] = []
+    start: Optional[int] = None
+    cursor = 0
+    lines = text.splitlines(keepends=True)
+
+    for line in lines:
+        stripped = line.strip()
+        if stripped:
+            if start is None:
+                start = cursor
+        elif start is not None:
+            blocks.append((start, text[start:cursor].rstrip("\n")))
+            start = None
+        cursor += len(line)
+
+    if start is not None:
+        blocks.append((start, text[start:].rstrip("\n")))
+
+    return blocks
+
+
+def first_narrative_period_violation(paragraph: str) -> Optional[int]:
+    quote_stack: list[str] = []
+    quote_pairs = {"“": "”", "‘": "’", "「": "」", "『": "』"}
+    closing_quotes = set(quote_pairs.values())
+
+    for index, char in enumerate(paragraph):
+        if char in quote_pairs:
+            quote_stack.append(quote_pairs[char])
+            continue
+        if char in closing_quotes:
+            if quote_stack and char == quote_stack[-1]:
+                quote_stack.pop()
+            continue
+        if char == "。" and not quote_stack:
+            if paragraph[index + 1 :].strip():
+                return index
+    return None
+
+
 def validate_chapter_body(novel_dir: Path, chapter: int, result: Result) -> None:
     chapter_path = novel_dir / f"chapters/ch-{chapter:03d}.md"
     if not chapter_path.exists():
@@ -249,6 +290,19 @@ def validate_chapter_body(novel_dir: Path, chapter: int, result: Result) -> None
                 f"chapter body leaks internal marker ({label}) at line {line_no}: "
                 f"{match.group(0)} :: {line[:140]}"
             )
+
+    for offset, paragraph in paragraph_blocks(body):
+        violation_at = first_narrative_period_violation(paragraph)
+        if violation_at is None:
+            continue
+        absolute = start + offset + violation_at
+        line_no = text.count("\n", 0, absolute) + 1
+        excerpt = paragraph.replace("\n", " ").strip()
+        result.error(
+            "chapter body paragraph break violation "
+            f"at line {line_no}: narrative sentence ended with 。 but paragraph continues :: "
+            f"{excerpt[:140]}"
+        )
 
 
 def section_block(text: str, title: str) -> str:

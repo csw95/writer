@@ -7,7 +7,7 @@
 | conflict_strength | 9 | 局部暴雪和坠物危机将冲突推入现实危险。 |
 | pacing_speed | 8 | 校内降温、雪线、坠物、断句层层升级。 |
 | satisfaction_level | 9 | 守护代价和女主主动遮掩形成情绪回报。 |
-| hook_strength | 9 | “三世偿债，最后一归”强拉力。 |
+| hook_strength | 9 | “三世偿债，终归此世”强拉力。 |
 | genre_promise | 9 | 幻想言情核心快感明确，校园现实与宿命规则结合。 |
 | logic_consistency | 9 | 异常局限小范围，角色不越权解释。 |
 | world_fidelity | 9 | 护身残术有代价，凡世公众未确认仙神。 |
